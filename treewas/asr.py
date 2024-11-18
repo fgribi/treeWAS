@@ -5,18 +5,22 @@ from .tree import TreeWrapper
 
 def fitch_downpass(genes, tree):
     n_loci, __ = genes.shape
-    scores = pd.Series(np.zeros(n_loci, dtype=int))
-    reconstructed = genes.astype("Int8")
+    scores = pd.Series(np.zeros(n_loci, dtype=int), index=genes.index)
+
+    # Consider NAs as ambiguous
+    reconstructed = genes.fillna(2).astype(np.int8)
 
     for node in tree.traverse("postorder"):
         if not node.is_leaf():
             left = reconstructed[node.children[0].name]
             right = reconstructed[node.children[1].name]
 
-            # Increase the score if the two states do not match
+            # Increase the score if the two states do not match, i.e. the intersection of the state sets is zero.
             scores += (left + right == 1)
 
-            # Use 2 to represent the union of 0 and 1
+            # Use 2 to represent the union of 0 and 1.
+            # The following essentially assigns the parent node the intersection of the state sets given that it is not
+            # empty, otherwise it assigns the union.
             reconstructed[node.name] = ((left == right) * left +
                                         (left + right == 1) * 2 +
                                         ((left == 2) & (right != 2)) * right +
@@ -37,8 +41,8 @@ def fitch_uppass(reconstructed, tree):
             encompassing = encompassing & ((right == 1 - current) | (left == 1 - current))
 
             # No need to account for expanding ambiguity for binary states
-            current.loc[diminished] = ancestor.loc[diminished]  # account for diminished ambiguity
-            current.loc[encompassing] = 2  # account for encompassing ambiguity
+            reconstructed.loc[diminished, node.name] = ancestor.loc[diminished]
+            reconstructed.loc[encompassing, node.name] = 2
     reconstructed = reconstructed.astype(float)
     reconstructed[reconstructed == 2] = 0.5
     return reconstructed

@@ -210,7 +210,13 @@ def subsequent_score(rec_genes, rec_traits, edges, trait_type="binary", sign=Tru
     return scores if sign else np.abs(scores)
 
 
-def simulate_loci(n_sim, dist, tree, seed=None):
+def _non_polymorphic(data, leaf_names):
+    # Much faster to just convert the pandas DataFrame to numpy and do it like this than to use nunique
+    leaf_data = data[leaf_names].to_numpy()
+    return np.all(leaf_data == leaf_data[:, [0]], axis=1)
+
+
+def simulate_loci(n_sim, dist, tree, node_names, seed=None):
     """Simulate loci to be used for estimating null distribution of association scores.
 
     :param n_sim: Number of loci to be simulated. Should be at least then times the number of empirical loci.
@@ -223,12 +229,10 @@ def simulate_loci(n_sim, dist, tree, seed=None):
     :type seed: int
     """
 
-    def _non_polymorphic(data):
-        return data[leaf_names].nunique(axis=1) == 1
-
     def _mutate_loci(data, loci):
         n = len(loci)
         roots = rng.integers(0, 2, n, dtype=bool)
+        data.loc[:, tree.name] = roots
 
         # Draw the branches for the substitutions for each locus
         subs = np.zeros((len(length_dist), n), dtype=bool)
@@ -238,31 +242,30 @@ def simulate_loci(n_sim, dist, tree, seed=None):
 
         # Mutate the loci where it is indicated by subs
         for edge, node in enumerate(tree.traverse("preorder")):
-            if node.is_root():
-                data.loc[:, node.name] = roots
-            else:
-                data.loc[:, node.name] = data.loc[:, node.up.name]
-                data.loc[subs[edge - 1, :], node.name] = ~data.loc[subs[edge - 1, :], node.up.name]
+            if not node.is_root():
+                data.loc[:, node.name] = data[node.up.name]
+                current_subs = subs[edge - 1]
+                data.loc[current_subs, node.name] = ~data.loc[current_subs, node.up.name]
 
         return data
 
     rng = np.random.default_rng(seed)
-    sim_data = pd.DataFrame(dtype=bool)
+    sim_data = pd.DataFrame(np.zeros((n_sim, len(node_names)), dtype=bool), columns=node_names)
     branch_lengths = tree.edge_df["length"]
     length_dist = branch_lengths / branch_lengths.sum()
     leaf_names = tree.get_leaf_names()
 
-    n_subs = rng.choice(dist.size, size=n_sim, p=dist)
+    # Draw number of subs from homoplasy distribution. Add one, since the distribution does not include probability for
+    # zero substitutions
+    n_subs = rng.choice(dist.size, size=n_sim, p=dist) + 1
     sim_data = _mutate_loci(sim_data, np.arange(n_sim))
-    non_polymorphic = _non_polymorphic(sim_data)
+    non_polymorphic = _non_polymorphic(sim_data, leaf_names)
 
     # The simulated loci should all be polymorphic
-    n_iter = 0
     while non_polymorphic.any():
         non_polymorphic_loci = np.where(non_polymorphic)[0]
         sim_data.loc[non_polymorphic] = _mutate_loci(sim_data.loc[non_polymorphic], non_polymorphic_loci)
-        non_polymorphic = _non_polymorphic(sim_data)
-        n_iter += 1
+        non_polymorphic = _non_polymorphic(sim_data, leaf_names)
 
     return sim_data
 
@@ -271,28 +274,20 @@ def _get_distribution(scores: pd.Series) -> np.ndarray:
     """Constructs a distribution from a ``pd.Series`` containing discrete values."""
     counts = scores.value_counts().sort_index()
     full_counts = counts.reindex(range(0, scores.max() + 1), fill_value=0)
+
+    # Scores that are zero are disregarded
+    full_counts = full_counts.iloc[1:]
     dist = full_counts / full_counts.sum()
     return dist.to_numpy()
 
 
 def _get_p_values_ecdf(emp_scores: pd.DataFrame, sim_scores: pd.DataFrame) -> pd.DataFrame:
     """Calculates p-values for the empirical scores using the ECDF."""
-    n_sim, __ = sim_scores.shape
-    n_emp, __ = emp_scores.shape
-
     # TODO: implement using scipy or other library?
-    np_scores = emp_scores.to_numpy()
-    dist = sim_scores.to_numpy()
-
-    # Scores might be negative
-    np_scores = np.abs(np_scores)
-    dist = np.abs(dist)
-
-    dist = np.repeat(dist.T[np.newaxis, :, :], n_emp, axis=0)
-    mask = np_scores[:, :, np.newaxis] <= dist
-    scores = mask.sum(axis=2) / n_sim
-
-    return pd.DataFrame(scores)
+    np_scores = np.abs(emp_scores.to_numpy())
+    dist= np.abs(sim_scores.to_numpy())
+    p_values = np.mean(np_scores[:, np.newaxis, :] <= dist[np.newaxis, :, :], axis=1)
+    return pd.DataFrame(p_values, index=emp_scores.index, columns=emp_scores.columns)
 
 
 def treewas(genes, traits, tree, trait_type, n_sim, seed):
@@ -307,27 +302,28 @@ def treewas(genes, traits, tree, trait_type, n_sim, seed):
     :type traits: :class:pandas.DataFrame
     """
     # TODO: finish implementation
-    # n_loci, __ = genes.shape
-    # leaf_names = tree.get_leaf_names()
+    n_loci, __ = genes.shape
+    leaf_names = tree.get_leaf_names()
 
-    # rec_genes, homoplasy_scores = fitch_parsimony(genes, tree, get_scores=True)
-    # homoplasy_dist = _get_distribution(homoplasy_scores)
+    rec_genes, homoplasy_scores = fitch_parsimony(genes, tree, get_scores=True)
+    homoplasy_dist = _get_distribution(homoplasy_scores)
 
-    # edges = tree.edge_df
-    # score1_emp = terminal_score(genes.loc[leaf_names, :], traits.loc[:, leaf_names], trait_type)
-    # score2_emp = simultaneous_score(genes, traits, edges, trait_type)
-    # score3_emp = subsequent_score(genes, traits, edges, trait_type)
+    edges = tree.edge_df
+    score1_emp = terminal_score(genes.loc[:, leaf_names], traits.loc[leaf_names, :], trait_type)
+    score2_emp = simultaneous_score(rec_genes, traits, edges, trait_type)
+    score3_emp = subsequent_score(rec_genes, traits, edges, trait_type)
 
-    # sim_genes = simulate_loci(n_loci, homoplasy_dist, tree, seed)
-    # score1_sim = terminal_score(sim_genes.loc[leaf_names, :], traits.loc[:, leaf_names], trait_type)
-    # score2_sim = simultaneous_score(sim_genes, traits, edges, trait_type)
-    # score3_sim = subsequent_score(sim_genes, traits, edges, trait_type)
+    sim_genes = simulate_loci(n_sim, homoplasy_dist, tree, rec_genes.columns, seed)
+    rec_sim_genes = fitch_parsimony(sim_genes, tree)
+    score1_sim = terminal_score(rec_sim_genes.loc[:, leaf_names], traits.loc[leaf_names, :], trait_type)
+    score2_sim = simultaneous_score(rec_sim_genes, traits, edges, trait_type)
+    score3_sim = subsequent_score(rec_sim_genes, traits, edges, trait_type)
 
-    # p_val_score1 = _get_p_values_ecdf(score1_emp, score1_sim)
-    # p_val_score2 = _get_p_values_ecdf(score2_emp, score2_sim)
-    # p_val_score3 = _get_p_values_ecdf(score3_emp, score3_sim)
+    p_val_score1 = _get_p_values_ecdf(score1_emp, score1_sim)
+    p_val_score2 = _get_p_values_ecdf(score2_emp, score2_sim)
+    p_val_score3 = _get_p_values_ecdf(score3_emp, score3_sim)
 
-    # return p_val_score1, p_val_score2, p_val_score3
+    return p_val_score1, p_val_score2, p_val_score3
 
 
 def main():
