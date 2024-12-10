@@ -76,6 +76,12 @@ def fitch_parsimony(genes, tree, get_scores=False):
         Systematic Biology,  1971, https://doi.org/10.1093/sysbio/20.4.406.
     """
 
+    unique_values = pd.unique(genes.dropna().values.ravel())
+    if unique_values.size != 2:
+        raise NotImplementedError("Current implementation of Fitch's parsimony only works for binary states."
+                                  " Consider using a different tool for the reconstruction of ancestral states.")
+        # TODO implement
+
     reconstructed, scores = fitch_downpass(genes, tree)
     reconstructed = fitch_uppass(reconstructed, tree)
     res = (reconstructed, scores) if get_scores else reconstructed

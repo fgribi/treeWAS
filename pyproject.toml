@@ -6,10 +6,14 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "ete3>=3.1.3",
+    "fire>=0.7.0",
     "numpy>=2.1.3",
     "pandas>=2.2.3",
     "scipy>=1.14.1",
 ]
+
+[project.scripts]
+treewas = "treewas.treewas:main"
 
 [build-system]
 requires = ["hatchling"]
