@@ -1,6 +1,9 @@
 import numpy as np
 import pandas as pd
-from .tree import TreeWrapper
+from treewas.tree import TreeWrapper
+
+# Make pandas shut up about setting values on copies
+pd.options.mode.chained_assignment = None
 
 
 def fitch_downpass(genes, tree):

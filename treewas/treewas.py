@@ -6,8 +6,8 @@ import pandas as pd
 from scipy.stats import chi2_contingency
 from itertools import combinations
 
-from .asr import fitch_parsimony, fitch_downpass
-from .tree import TreeWrapper
+from treewas.asr import fitch_parsimony, fitch_downpass
+from treewas.tree import TreeWrapper
 
 TRAIT_TYPES = ["discrete", "continuous", "categorical"]
 RECONSTRUCTION_TYPES = ["parsimony", "ML"]
@@ -22,7 +22,7 @@ def _nandot(a, b):
 
 
 def _normalize(data):
-    return (data - data.min()) / (data.max() - data.min())
+    return (0 + data - data.min()) / (0 + data.max() - data.min())
 
 
 def _get_anc_dec(edges, data, axis):
@@ -38,12 +38,12 @@ def _get_anc_dec(edges, data, axis):
 
 
 def _row_chi_square(row: pd.Series, col: pd.Series):
-    # Create a mask to filter out rows with NaN in either `row` or `col`
-    mask = ~(row.isna() | col.isna())
+    # Calculating the contigency table as below is significantly faster than using pd.crosstab
+    row_mask = row.isna().to_numpy(dtype=bool)
+    col_mask = col.isna().to_numpy(dtype=bool)
+    mask = ~(row_mask | col_mask)
     filtered_row = row[mask]
     filtered_col = col[mask]
-
-    # Convert to a contingency table
     unique_row, row_indices = np.unique(filtered_row, return_inverse=True)
     unique_col, col_indices = np.unique(filtered_col, return_inverse=True)
     contingency_table = np.zeros((len(unique_row), len(unique_col)), dtype=int)
@@ -104,12 +104,11 @@ def terminal_score(genes, traits, trait_type="discrete", sign=True):
     if trait_type not in TRAIT_TYPES:
         raise ValueError(f"Invalid trait type specified. Must be one of {TRAIT_TYPES}")
 
-    if trait_type == "continuous":
-        traits = _normalize(traits)
 
     if trait_type == "categorical":
         scores = _chi_square(genes, traits)
     else:
+        traits = _normalize(traits)
         scores = _non_categorical_terminal_score(genes, traits)
 
     scores = scores.set_index(genes.index)
@@ -161,12 +160,10 @@ def simultaneous_score(rec_genes, rec_traits, edges, trait_type="discrete", sign
     anc_genes, desc_genes = _get_anc_dec(edges, rec_genes, axis=0)
     diff_genes = anc_genes - desc_genes
 
-    if trait_type == "continuous":
-        rec_traits = _normalize(rec_traits)
-
     if trait_type == "categorical":
         scores = _categorical_simultaneous_score(diff_genes, edges, rec_genes, rec_traits)
     else:
+        rec_traits = _normalize(rec_traits)
         anc_traits, desc_traits = _get_anc_dec(edges, rec_traits, axis=1)
         diff_traits = anc_traits - desc_traits
         scores = _nandot(diff_genes, diff_traits)
@@ -219,8 +216,7 @@ def subsequent_score(rec_genes, rec_traits, edges, trait_type="discrete", sign=T
     if trait_type == "categorical":
         scores = _chi_square(rec_genes, rec_traits)
     else:
-        if trait_type == "continuous":
-            rec_traits = _normalize(rec_traits)
+        rec_traits = _normalize(rec_traits)
         scores = _non_categorical_subsequent_score(edges, rec_genes, rec_traits)
 
     scores = scores.set_index(rec_genes.index)
