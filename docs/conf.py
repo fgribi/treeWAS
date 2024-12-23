@@ -18,12 +18,13 @@ sys.path.insert(0, os.path.abspath('../../treewas'))
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    "sphinx.ext.autodoc"
+    'sphinx.ext.autodoc',
+    'sphinx.ext.viewcode'
 ]
 autodoc_default_options = {
     'members': True,
     'special-members': '__init__',
-    'inherited-members': True,
+    'inherited-members': False,
     'show-inheritance': True,
 }
 templates_path = ['_templates']
