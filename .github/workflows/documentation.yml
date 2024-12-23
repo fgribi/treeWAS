@@ -22,6 +22,8 @@ jobs:
           uv pip install sphinx sphinx_rtd_theme myst_parser
       - name: Sphinx build
         run: |
+          echo "export PYTHONPATH=$(pwd)/treewas:$PYTHONPATH" >> $GITHUB_ENV
+          pwd
           source .venv/bin/activate
           cd docs
           sphinx-apidoc -o . ../treewas -f
