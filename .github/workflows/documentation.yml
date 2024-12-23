@@ -11,20 +11,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-      - name: Set up uv
-        run: |
-          pip install uv
-          uv venv
-          source .venv/bin/activate
       - name: Install dependencies
         run: |
-          uv pip install -r pyproject.toml
-          uv pip install sphinx sphinx_rtd_theme myst_parser
+          python -m pip install .
+          pip install sphinx sphinx_rtd_theme myst_parser
       - name: Sphinx build
         run: |
           echo "export PYTHONPATH=$(pwd)/treewas:$PYTHONPATH" >> $GITHUB_ENV
           pwd
-          source .venv/bin/activate
           cd docs
           sphinx-apidoc -o . ../treewas -f
           make html
