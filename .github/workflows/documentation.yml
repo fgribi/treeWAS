@@ -14,11 +14,11 @@ jobs:
       - name: Set up uv
         run: |
           pip install uv
-          uvenv venv
-          source venv/bin/activate
+          uv venv
+          source .venv/bin/activate
       - name: Install dependencies
         run: |
-          uv install
+          uv pip install -r pyproject.toml
           uv pip install sphinx sphinx_rtd_theme myst_parser
       - name: Sphinx build
         run: |
