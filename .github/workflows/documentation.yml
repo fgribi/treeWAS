@@ -11,9 +11,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
+      - name: Set up uv
+        run: |
+          pip install uv
+          uvenv venv
+          source venv/bin/activate
       - name: Install dependencies
         run: |
-          pip install sphinx sphinx_rtd_theme myst_parser
+          uv install
+          uv pip install sphinx sphinx_rtd_theme myst_parser
       - name: Sphinx build
         run: |
           cd docs
