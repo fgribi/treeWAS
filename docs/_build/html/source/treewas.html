@@ -1,0 +1,1519 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>treewas package &mdash; treeWAS  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            treeWAS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">treewas package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-treewas.asr">treewas.asr module</a><ul>
+<li><a class="reference internal" href="#treewas.asr.fitch_downpass"><code class="docutils literal notranslate"><span class="pre">fitch_downpass()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.asr.fitch_parsimony"><code class="docutils literal notranslate"><span class="pre">fitch_parsimony()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.asr.fitch_uppass"><code class="docutils literal notranslate"><span class="pre">fitch_uppass()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-treewas.tree">treewas.tree module</a><ul>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper"><code class="docutils literal notranslate"><span class="pre">TreeWrapper</span></code></a><ul>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.__init__"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.add_child"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.add_child()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.add_face"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.add_face()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.add_feature"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.add_feature()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.add_features"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.add_features()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.add_sister"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.add_sister()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.check_monophyly"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.check_monophyly()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.children"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.children</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.compare"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.compare()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.convert_to_ultrametric"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.convert_to_ultrametric()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.cophenetic_matrix"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.cophenetic_matrix()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.copy"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.copy()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.del_feature"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.del_feature()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.delete"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.delete()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.describe"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.describe()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.detach"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.detach()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.dist"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.dist</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.edge_df"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.edge_df</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.expand_polytomies"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.expand_polytomies()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.faces"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.faces</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.from_parent_child_table"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.from_parent_child_table()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.from_skbio"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.from_skbio()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.get_ancestors"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.get_ancestors()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.get_ascii"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.get_ascii()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.get_cached_content"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.get_cached_content()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.get_children"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.get_children()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.get_closest_leaf"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.get_closest_leaf()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.get_common_ancestor"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.get_common_ancestor()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.get_descendants"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.get_descendants()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.get_distance"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.get_distance()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.get_edges"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.get_edges()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.get_farthest_leaf"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.get_farthest_leaf()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.get_farthest_node"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.get_farthest_node()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.get_leaf_names"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.get_leaf_names()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.get_leaves"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.get_leaves()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.get_leaves_by_name"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.get_leaves_by_name()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.get_midpoint_outgroup"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.get_midpoint_outgroup()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.get_monophyletic"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.get_monophyletic()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.get_sisters"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.get_sisters()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.get_topology_id"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.get_topology_id()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.get_tree_root"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.get_tree_root()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.img_style"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.img_style</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.is_leaf"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.is_leaf()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.is_root"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.is_root()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.iter_ancestors"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.iter_ancestors()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.iter_descendants"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.iter_descendants()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.iter_edges"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.iter_edges()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.iter_leaf_names"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.iter_leaf_names()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.iter_leaves"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.iter_leaves()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.iter_prepostorder"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.iter_prepostorder()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.iter_search_nodes"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.iter_search_nodes()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.ladderize"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.ladderize()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.phonehome"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.phonehome()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.populate"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.populate()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.prune"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.prune()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.remove_child"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.remove_child()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.remove_sister"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.remove_sister()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.render"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.render()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.resolve_polytomy"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.resolve_polytomy()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.robinson_foulds"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.robinson_foulds()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.search_nodes"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.search_nodes()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.set_outgroup"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.set_outgroup()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.set_style"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.set_style()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.show"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.show()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.sort_descendants"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.sort_descendants()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.standardize"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.standardize()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.support"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.support</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.swap_children"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.swap_children()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.traverse"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.traverse()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.unroot"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.unroot()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.up"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.up</span></code></a></li>
+<li><a class="reference internal" href="#treewas.tree.TreeWrapper.write"><code class="docutils literal notranslate"><span class="pre">TreeWrapper.write()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-treewas.treewas">treewas.treewas module</a><ul>
+<li><a class="reference internal" href="#treewas.treewas.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.treewas.run_treewas"><code class="docutils literal notranslate"><span class="pre">run_treewas()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.treewas.simulate_loci"><code class="docutils literal notranslate"><span class="pre">simulate_loci()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.treewas.simultaneous_score"><code class="docutils literal notranslate"><span class="pre">simultaneous_score()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.treewas.subsequent_score"><code class="docutils literal notranslate"><span class="pre">subsequent_score()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.treewas.terminal_score"><code class="docutils literal notranslate"><span class="pre">terminal_score()</span></code></a></li>
+<li><a class="reference internal" href="#treewas.treewas.treewas"><code class="docutils literal notranslate"><span class="pre">treewas()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-treewas">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">treeWAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">treewas package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/source/treewas.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="treewas-package">
+<h1>treewas package<a class="headerlink" href="#treewas-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-treewas.asr">
+<span id="treewas-asr-module"></span><h2>treewas.asr module<a class="headerlink" href="#module-treewas.asr" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="treewas.asr.fitch_downpass">
+<span class="sig-prename descclassname"><span class="pre">treewas.asr.</span></span><span class="sig-name descname"><span class="pre">fitch_downpass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.asr.fitch_downpass" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="treewas.asr.fitch_parsimony">
+<span class="sig-prename descclassname"><span class="pre">treewas.asr.</span></span><span class="sig-name descname"><span class="pre">fitch_parsimony</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_scores</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.asr.fitch_parsimony" title="Link to this definition"></a></dt>
+<dd><p>Perform Fitch’s parsimony algorithm</p>
+<p>Reconstructs ancestral state sets using Fitch’s algorithm <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> and if <code class="docutils literal notranslate"><span class="pre">get_scores</span></code>
+is <code class="docutils literal notranslate"><span class="pre">True</span></code>, the per locus parsimony scores will be returned.</p>
+<p>For genes where  the ancestral state is ambiguous, the entry is set to <cite>0.5</cite>, otherwise the entry is either one
+or zero.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Currently only works for binary states.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>genes</strong> (<em>pandas.DataFrame</em>) – A table containing the observed binary genotypes. Each row represents a genetic locus and each column
+represents an individual from the sample</p></li>
+<li><p><strong>tree</strong> (<a class="reference internal" href="#treewas.tree.TreeWrapper" title="treewas.tree.TreeWrapper"><em>TreeWrapper</em></a>) – The reconstructed phylogeny. Names of leaf nodes need to correspond to the names of the individuals.
+Has to be bifurcating.</p></li>
+<li><p><strong>get_scores</strong> (<em>bool</em>) – If set to True, returns the per locus parsimony scores</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The reconstructed states and possibly the per-site parsimony score</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="field-list simple">
+<dt class="field-odd">class<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>pd.DataFrame</cite> | tuple</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+<section id="references">
+<h3>References<a class="headerlink" href="#references" title="Link to this heading"></a></h3>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>W. M. Fitch, <em>Toward Defining the Course of Evolution: Minimum Change for a Specific Tree Topology</em>,
+Systematic Biology,  1971, <a class="reference external" href="https://doi.org/10.1093/sysbio/20.4.406">https://doi.org/10.1093/sysbio/20.4.406</a>.</p>
+</aside>
+</aside>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="treewas.asr.fitch_uppass">
+<span class="sig-prename descclassname"><span class="pre">treewas.asr.</span></span><span class="sig-name descname"><span class="pre">fitch_uppass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reconstructed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.asr.fitch_uppass" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-treewas.tree">
+<span id="treewas-tree-module"></span><h2>treewas.tree module<a class="headerlink" href="#module-treewas.tree" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">treewas.tree.</span></span><span class="sig-name descname"><span class="pre">TreeWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newick</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">support</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quoted_node_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TreeNode</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newick</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">support</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quoted_node_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.add_child">
+<span class="sig-name descname"><span class="pre">add_child</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">child</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">support</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.add_child" title="Link to this definition"></a></dt>
+<dd><p>Adds a new child to this node. If child node is not suplied
+as an argument, a new node instance will be created.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>child</strong> (<em>None</em>) – the node instance to be added as a child.</p></li>
+<li><p><strong>name</strong> (<em>None</em>) – the name that will be given to the child.</p></li>
+<li><p><strong>dist</strong> (<em>None</em>) – the distance from the node to the child.</p></li>
+<li><p><strong>support</strong> (<em>None</em>) – the support value of child partition.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The child node instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.add_face">
+<span class="sig-name descname"><span class="pre">add_face</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">face</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'branch-right'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.add_face" title="Link to this definition"></a></dt>
+<dd><p>Add a fixed face to the node.  This type of faces will be
+always attached to nodes, independently of the layout
+function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>face</strong> – a Face or inherited instance</p></li>
+<li><p><strong>column</strong> – An integer number starting from 0</p></li>
+<li><p><strong>position</strong> (<em>&quot;branch-right&quot;</em>) – Posible values are:
+“branch-right”, “branch-top”, “branch-bottom”, “float”,
+“aligned”</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.add_feature">
+<span class="sig-name descname"><span class="pre">add_feature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pr_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pr_value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.add_feature" title="Link to this definition"></a></dt>
+<dd><p>Add or update a node’s feature.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.add_features">
+<span class="sig-name descname"><span class="pre">add_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">features</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.add_features" title="Link to this definition"></a></dt>
+<dd><p>Add or update several features.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.add_sister">
+<span class="sig-name descname"><span class="pre">add_sister</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sister</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.add_sister" title="Link to this definition"></a></dt>
+<dd><p>Adds a sister to this node. If sister node is not supplied
+as an argument, a new TreeNode instance will be created and
+returned.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.check_monophyly">
+<span class="sig-name descname"><span class="pre">check_monophyly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_missing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unrooted</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.check_monophyly" title="Link to this definition"></a></dt>
+<dd><p>Returns True if a given target attribute is monophyletic under
+this node for the provided set of values.</p>
+<p>If not all values are represented in the current tree
+structure, a ValueError exception will be raised to warn that
+strict monophyly could never be reached (this behaviour can be
+avoided by enabling the <cite>ignore_missing</cite> flag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> – a set of values for which monophyly is
+expected.</p></li>
+<li><p><strong>target_attr</strong> – node attribute being used to check
+monophyly (i.e. species for species trees, names for gene
+family trees, or any custom feature present in the tree).</p></li>
+<li><p><strong>ignore_missing</strong> (<em>False</em>) – Avoid raising an Exception when
+missing attributes are found.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>unrooted</strong> (<em>False</em>) – If True, tree will be treated as unrooted, thus
+allowing to find monophyly even when current outgroup is splitting a
+monophyletic group.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the following tuple
+IsMonophyletic (boolean),
+clade type (‘monophyletic’, ‘paraphyletic’ or ‘polyphyletic’),
+leaves breaking the monophyly (set)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.children">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">children</span></span><a class="headerlink" href="#treewas.tree.TreeWrapper.children" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.compare">
+<span class="sig-name descname"><span class="pre">compare</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_tree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_collateral</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_support_source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_support_ref</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_duplications</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expand_polytomies</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unrooted</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_treeko_splits_to_be_artifact</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_tree_attr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'name'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_tree_attr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'name'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.compare" title="Link to this definition"></a></dt>
+<dd><p>compare this tree with another using robinson foulds symmetric difference
+and number of shared edges. Trees of different sizes and with duplicated
+items allowed.</p>
+<p>returns: a Python dictionary with results</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.convert_to_ultrametric">
+<span class="sig-name descname"><span class="pre">convert_to_ultrametric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tree_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'balanced'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.convert_to_ultrametric" title="Link to this definition"></a></dt>
+<dd><p>Converts a tree into ultrametric topology (all leaves must have
+the same distance to root). Note that, for visual inspection
+of ultrametric trees, node.img_style[“size”] should be set to
+0.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.cophenetic_matrix">
+<span class="sig-name descname"><span class="pre">cophenetic_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.cophenetic_matrix" title="Link to this definition"></a></dt>
+<dd><p>Generate a cophenetic distance matrix of the treee to standard output</p>
+<p>The <cite>cophenetic matrix &lt;https://en.wikipedia.org/wiki/Cophenetic&gt;</cite> is a matrix representation of the
+distance between each node.</p>
+<p>if we have a tree like</p>
+<blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><p>—-A</p>
+</div></blockquote>
+<p>_____________|y
+|            |
+|            —-B</p>
+</div></blockquote>
+<dl>
+<dt>________|z</dt><dd><div class="line-block">
+<div class="line">—-C</div>
+<div class="line"><a href="#id3"><span class="problematic" id="id4">|</span></a></div>
+</div>
+<dl>
+<dt><a href="#id5"><span class="problematic" id="id6">|</span></a>____________|x     —–D</dt><dd><div class="line-block">
+<div class="line"><a href="#id7"><span class="problematic" id="id8">|</span></a></div>
+</div>
+<dl>
+<dt><a href="#id9"><span class="problematic" id="id10">|</span></a>______|w</dt><dd><div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+<p>—–E</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<p>Where w,x,y,z are internal nodes.
+d(A,B) = d(y,A) + d(y,B)
+and
+d(A, E) = d(z,A) + d(z, E) = {d(z,y) + d(y,A)} + {d(z,x) + d(x,w) + d(w,E)}</p>
+<p>We use an idea inspired by the ete3 team: <a class="reference external" href="https://gist.github.com/jhcepas/279f9009f46bf675e3a890c19191158b">https://gist.github.com/jhcepas/279f9009f46bf675e3a890c19191158b</a> :</p>
+<p>For each node find its path to the root.</p>
+<p>e.g.</p>
+<p>A -&gt; A, y, z
+E -&gt; E, w, x,z</p>
+<p>and make these orderless sets. Then we XOR the two sets to only find the elements
+that are in one or other sets but not both. In this case A, E, y, x, w.</p>
+<p>The distance between the two nodes is the sum of the distances from each of those nodes
+to the parent</p>
+<p>One more optimization: since the distances are symmetric, and distance to itself is zero
+we user itertools.combinations rather than itertools.permutations. This cuts our computes from theta(n^2)
+1/2n^2 - n (= O(n^2), which is still not great, but in reality speeds things up for large trees).</p>
+<dl class="simple">
+<dt>For this tree, we will return the two dimensional array:</dt><dd><p>A                  B                   C                   D                     E</p>
+</dd>
+</dl>
+<p>A                0           d(A-y) + d(B-y)     d(A-z) + d(C-z)     d(A-z) + d(D-z)       d(A-z) + d(E-z)
+B         d(B-y) + d(A-y)           0            d(B-z) + d(C-z)     d(B-z) + d(D-z)       d(B-z) + d(E-z)
+C         d(C-z) + d(A-z)    d(C-z) + d(B-z)            0            d(C-x) + d(D-x)       d(C-x) + d(E-x)
+D         d(D-z) + d(A-z)    d(D-z) + d(B-z)     d(D-x) + d(C-x)            0              d(D-w) + d(E-w)
+E         d(E-z) + d(A-z)    d(E-z) + d(B-z)     d(E-x) + d(C-x)     d(E-w) + d(D-w)              0</p>
+<p>We will also return the one dimensional array with the leaves in the order in which they appear in the matrix
+(i.e. the column and/or row headers).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> – the optional file to write to. If not provided, output will be to standard output</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>two-dimensional array and a one dimensional array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpickle'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.copy" title="Link to this definition"></a></dt>
+<dd><p>Returns a copy of the current node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>method</strong> (<em>cpickle</em>) – Protocol used to copy the node</p>
+</dd>
+</dl>
+<p>structure. The following values are accepted:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>“newick”: Tree topology, node names, branch lengths and
+branch support values will be copied by as represented in
+the newick string (copy by newick string serialisation).</p></li>
+<li><p>“newick-extended”: Tree topology and all node features
+will be copied based on the extended newick format
+representation. Only node features will be copied, thus
+excluding other node attributes. As this method is also
+based on newick serialisation, features will be converted
+into text strings when making the copy.</p></li>
+<li><p>“cpickle”: The whole node structure and its content is
+cloned based on cPickle object serialisation (slower, but
+recommended for full tree copying)</p></li>
+<li><p>“deepcopy”: The whole node structure and its content is
+copied based on the standard “copy” Python functionality
+(this is the slowest method but it allows to copy complex
+objects even if attributes point to lambda functions,
+etc.)</p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.del_feature">
+<span class="sig-name descname"><span class="pre">del_feature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pr_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.del_feature" title="Link to this definition"></a></dt>
+<dd><p>Permanently deletes a node’s feature.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prevent_nondicotomic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preserve_branch_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.delete" title="Link to this definition"></a></dt>
+<dd><p>Deletes node from the tree structure. Notice that this method
+makes ‘disappear’ the node from the tree structure. This means
+that children from the deleted node are transferred to the
+next available parent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prevent_nondicotomic</strong> (<em>True</em>) – When True (default), delete
+function will be execute recursively to prevent
+single-child nodes.</p></li>
+<li><p><strong>preserve_branch_length</strong> (<em>False</em>) – If True, branch lengths
+of the deleted nodes are transferred (summed up) to its
+parent’s branch, thus keeping original distances among
+nodes.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>      <span class="o">/</span> <span class="n">C</span>
+<span class="n">root</span><span class="o">-|</span>
+     <span class="o">|</span>        <span class="o">/</span> <span class="n">B</span>
+      \<span class="o">---</span> <span class="n">H</span> <span class="o">|</span>
+              \ <span class="n">A</span>
+
+<span class="o">&gt;</span> <span class="n">H</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span> <span class="n">will</span> <span class="n">produce</span> <span class="n">this</span> <span class="n">structure</span><span class="p">:</span>
+
+      <span class="o">/</span> <span class="n">C</span>
+     <span class="o">|</span>
+<span class="n">root</span><span class="o">-|--</span><span class="n">B</span>
+     <span class="o">|</span>
+      \ <span class="n">A</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.describe">
+<span class="sig-name descname"><span class="pre">describe</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.describe" title="Link to this definition"></a></dt>
+<dd><p>Prints general information about this node and its
+connections.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.detach">
+<span class="sig-name descname"><span class="pre">detach</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.detach" title="Link to this definition"></a></dt>
+<dd><p>Detachs this node (and all its descendants) from its parent
+and returns the referent to itself.</p>
+<p>Detached node conserves all its structure of descendants, and can
+be attached to another node through the ‘add_child’ function. This
+mechanism can be seen as a cut and paste.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.dist">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dist</span></span><a class="headerlink" href="#treewas.tree.TreeWrapper.dist" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.edge_df">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">edge_df</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">DataFrame</span></em><a class="headerlink" href="#treewas.tree.TreeWrapper.edge_df" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.expand_polytomies">
+<span class="sig-name descname"><span class="pre">expand_polytomies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_attr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'name'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polytomy_size_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_large_polytomies</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.expand_polytomies" title="Link to this definition"></a></dt>
+<dd><div class="versionadded">
+<p><span class="versionmodified added">Added in version 2.3.</span></p>
+</div>
+<p>Given a tree with one or more polytomies, this functions returns the
+list of all trees (in newick format) resulting from the combination of
+all possible solutions of the multifurcated nodes.</p>
+<p><a class="reference external" href="http://ajmonline.org/2010/darwin.php">http://ajmonline.org/2010/darwin.php</a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.faces">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">faces</span></span><a class="headerlink" href="#treewas.tree.TreeWrapper.faces" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.from_parent_child_table">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_parent_child_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_child_table</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.from_parent_child_table" title="Link to this definition"></a></dt>
+<dd><p>Converts a parent-child table into an ETE Tree instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parent_child_table</strong> – a list of tuples containing parent-child
+relationships. For example: [(“A”, “B”, 0.1), (“A”, “C”, 0.2), (“C”,
+“D”, 1), (“C”, “E”, 1.5)]. Where each tuple represents: [parent, child,
+child-parent-dist]</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new Tree instance</p>
+</dd>
+<dt class="field-odd">Example<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">Tree</span><span class="o">.</span><span class="n">from_parent_child_table</span><span class="p">([(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">tree</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.from_skbio">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_skbio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">skbio_tree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_attributes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.from_skbio" title="Link to this definition"></a></dt>
+<dd><p>Converts a scikit-bio TreeNode object into ETE Tree object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>skbio_tree</strong> – a scikit bio TreeNode instance</p></li>
+<li><p><strong>map_attributes</strong> (<em>None</em>) – A list of attribute nanes in the
+scikit-bio tree that should be mapped into the ETE tree
+instance. (name, id and branch length are always mapped)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new Tree instance</p>
+</dd>
+<dt class="field-odd">Example<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">Tree</span><span class="o">.</span><span class="n">from_skibio</span><span class="p">(</span><span class="n">skbioTree</span><span class="p">,</span> <span class="n">map_attributes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.get_ancestors">
+<span class="sig-name descname"><span class="pre">get_ancestors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.get_ancestors" title="Link to this definition"></a></dt>
+<dd><p>versionadded: 2.2</p>
+<p>Returns the list of all ancestor nodes from current node to
+the current tree root.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.get_ascii">
+<span class="sig-name descname"><span class="pre">get_ascii</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">show_internal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compact</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.get_ascii" title="Link to this definition"></a></dt>
+<dd><p>Returns a string containing an ascii drawing of the tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>show_internal</strong> – includes internal edge names.</p></li>
+<li><p><strong>compact</strong> – use exactly one line per tip.</p></li>
+<li><p><strong>attributes</strong> – A list of node attributes to shown in the
+ASCII representation.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.get_cached_content">
+<span class="sig-name descname"><span class="pre">get_cached_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">store_attr=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container_type=&lt;class</span> <span class="pre">'set'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaves_only=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_store=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.get_cached_content" title="Link to this definition"></a></dt>
+<dd><p>Returns a dictionary pointing to the preloaded content of each
+internal node under this tree. Such a dictionary is intended
+to work as a cache for operations that require many traversal
+operations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>store_attr</strong> (<em>None</em>) – Specifies the node attribute that
+should be cached (i.e. name, distance, etc.). When none,
+the whole node instance is cached.</p></li>
+<li><p><strong>_store</strong> – (internal use)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.get_children">
+<span class="sig-name descname"><span class="pre">get_children</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.get_children" title="Link to this definition"></a></dt>
+<dd><p>Returns an independent list of node’s children.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.get_closest_leaf">
+<span class="sig-name descname"><span class="pre">get_closest_leaf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topology_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_leaf_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.get_closest_leaf" title="Link to this definition"></a></dt>
+<dd><p>Returns node’s closest descendant leaf and the distance to
+it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>topology_only</strong> (<em>False</em>) – If set to True, distance
+between nodes will be referred to the number of nodes
+between them. In other words, topological distance will be
+used instead of branch length distances.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing the closest leaf referred to the
+current node and the distance to it.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.get_common_ancestor">
+<span class="sig-name descname"><span class="pre">get_common_ancestor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">target_nodes</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.get_common_ancestor" title="Link to this definition"></a></dt>
+<dd><p>Returns the first common ancestor between this node and a given
+list of ‘target_nodes’.</p>
+<p><strong>Examples:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">Tree</span><span class="p">(</span><span class="s2">&quot;(((A:0.1, B:0.01):0.001, C:0.0001):1.0[&amp;&amp;NHX:name=common], (D:0.00001):0.000001):2.0[&amp;&amp;NHX:name=root];&quot;</span><span class="p">)</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_descendants_by_name</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_descendants_by_name</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">common</span> <span class="o">=</span>  <span class="n">A</span><span class="o">.</span><span class="n">get_common_ancestor</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+<span class="nb">print</span> <span class="n">common</span><span class="o">.</span><span class="n">name</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.get_descendants">
+<span class="sig-name descname"><span class="pre">get_descendants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'levelorder'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_leaf_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.get_descendants" title="Link to this definition"></a></dt>
+<dd><p>Returns a list of all (leaves and internal) descendant nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>is_leaf_fn</strong> (<em>None</em>) – See <code class="xref py py-func docutils literal notranslate"><span class="pre">TreeNode.traverse()</span></code> for
+documentation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.get_distance">
+<span class="sig-name descname"><span class="pre">get_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topology_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.get_distance" title="Link to this definition"></a></dt>
+<dd><p>Returns the distance between two nodes. If only one target is
+specified, it returns the distance between the target and the
+current node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target</strong> – a node within the same tree structure.</p></li>
+<li><p><strong>target2</strong> – a node within the same tree structure. If
+not specified, current node is used as target2.</p></li>
+<li><p><strong>topology_only</strong> (<em>False</em>) – If set to True, distance will
+refer to the number of nodes between target and target2.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>branch length distance between target and
+target2. If topology_only flag is True, returns the number
+of nodes between target and target2.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.get_edges">
+<span class="sig-name descname"><span class="pre">get_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cached_content</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.get_edges" title="Link to this definition"></a></dt>
+<dd><div class="versionadded">
+<p><span class="versionmodified added">Added in version 2.3.</span></p>
+</div>
+<p>Returns the list of edges of a tree. Each edge is represented as a
+tuple of two elements, each containing the list of nodes separated by
+the edge.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.get_farthest_leaf">
+<span class="sig-name descname"><span class="pre">get_farthest_leaf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topology_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_leaf_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.get_farthest_leaf" title="Link to this definition"></a></dt>
+<dd><p>Returns node’s farthest descendant node (which is always a leaf), and the
+distance to it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>topology_only</strong> (<em>False</em>) – If set to True, distance
+between nodes will be referred to the number of nodes
+between them. In other words, topological distance will be
+used instead of branch length distances.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing the farthest leaf referred to the
+current node and the distance to it.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.get_farthest_node">
+<span class="sig-name descname"><span class="pre">get_farthest_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topology_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.get_farthest_node" title="Link to this definition"></a></dt>
+<dd><p>Returns the node’s farthest descendant or ancestor node, and the
+distance to it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>topology_only</strong> (<em>False</em>) – If set to True, distance
+between nodes will be referred to the number of nodes
+between them. In other words, topological distance will be
+used instead of branch length distances.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing the farthest node referred to the
+current node and the distance to it.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.get_leaf_names">
+<span class="sig-name descname"><span class="pre">get_leaf_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_leaf_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.get_leaf_names" title="Link to this definition"></a></dt>
+<dd><p>Returns the list of terminal node names under the current
+node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>is_leaf_fn</strong> (<em>None</em>) – See <code class="xref py py-func docutils literal notranslate"><span class="pre">TreeNode.traverse()</span></code> for
+documentation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.get_leaves">
+<span class="sig-name descname"><span class="pre">get_leaves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_leaf_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.get_leaves" title="Link to this definition"></a></dt>
+<dd><p>Returns the list of terminal nodes (leaves) under this node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>is_leaf_fn</strong> (<em>None</em>) – See <code class="xref py py-func docutils literal notranslate"><span class="pre">TreeNode.traverse()</span></code> for
+documentation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.get_leaves_by_name">
+<span class="sig-name descname"><span class="pre">get_leaves_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.get_leaves_by_name" title="Link to this definition"></a></dt>
+<dd><p>Returns a list of leaf nodes matching a given name.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.get_midpoint_outgroup">
+<span class="sig-name descname"><span class="pre">get_midpoint_outgroup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.get_midpoint_outgroup" title="Link to this definition"></a></dt>
+<dd><p>Returns the node that divides the current tree into two distance-balanced
+partitions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.get_monophyletic">
+<span class="sig-name descname"><span class="pre">get_monophyletic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.get_monophyletic" title="Link to this definition"></a></dt>
+<dd><div class="versionadded">
+<p><span class="versionmodified added">Added in version 2.2.</span></p>
+</div>
+<p>Returns a list of nodes matching the provided monophyly
+criteria. For a node to be considered a match, all
+<cite>target_attr</cite> values within and node, and exclusively them,
+should be grouped.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> – a set of values for which monophyly is
+expected.</p></li>
+<li><p><strong>target_attr</strong> – node attribute being used to check
+monophyly (i.e. species for species trees, names for gene
+family trees).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.get_sisters">
+<span class="sig-name descname"><span class="pre">get_sisters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.get_sisters" title="Link to this definition"></a></dt>
+<dd><p>Returns an independent list of sister nodes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.get_topology_id">
+<span class="sig-name descname"><span class="pre">get_topology_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'name'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.get_topology_id" title="Link to this definition"></a></dt>
+<dd><div class="versionadded">
+<p><span class="versionmodified added">Added in version 2.3.</span></p>
+</div>
+<p>Returns the unique ID representing the topology of the current tree. Two
+trees with the same topology will produce the same id. If trees are
+unrooted, make sure that the root node is not binary or use the
+tree.unroot() function before generating the topology id.</p>
+<p>This is useful to detect the number of unique topologies over a bunch of
+trees, without requiring full distance methods.</p>
+<p>The id is, by default, calculated based on the terminal node’s names. Any
+other node attribute could be used instead.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.get_tree_root">
+<span class="sig-name descname"><span class="pre">get_tree_root</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.get_tree_root" title="Link to this definition"></a></dt>
+<dd><p>Returns the absolute root node of current tree structure.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.img_style">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">img_style</span></span><a class="headerlink" href="#treewas.tree.TreeWrapper.img_style" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.is_leaf">
+<span class="sig-name descname"><span class="pre">is_leaf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.is_leaf" title="Link to this definition"></a></dt>
+<dd><p>Return True if current node is a leaf.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.is_root">
+<span class="sig-name descname"><span class="pre">is_root</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.is_root" title="Link to this definition"></a></dt>
+<dd><p>Returns True if current node has no parent</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.iter_ancestors">
+<span class="sig-name descname"><span class="pre">iter_ancestors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.iter_ancestors" title="Link to this definition"></a></dt>
+<dd><p>versionadded: 2.2</p>
+<p>Iterates over the list of all ancestor nodes from current node
+to the current tree root.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.iter_descendants">
+<span class="sig-name descname"><span class="pre">iter_descendants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'levelorder'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_leaf_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.iter_descendants" title="Link to this definition"></a></dt>
+<dd><p>Returns an iterator over all descendant nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>is_leaf_fn</strong> (<em>None</em>) – See <code class="xref py py-func docutils literal notranslate"><span class="pre">TreeNode.traverse()</span></code> for
+documentation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.iter_edges">
+<span class="sig-name descname"><span class="pre">iter_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cached_content</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.iter_edges" title="Link to this definition"></a></dt>
+<dd><div class="versionadded">
+<p><span class="versionmodified added">Added in version 2.3.</span></p>
+</div>
+<p>Iterate over the list of edges of a tree. Each edge is represented as a
+tuple of two elements, each containing the list of nodes separated by
+the edge.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.iter_leaf_names">
+<span class="sig-name descname"><span class="pre">iter_leaf_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_leaf_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.iter_leaf_names" title="Link to this definition"></a></dt>
+<dd><p>Returns an iterator over the leaf names under this node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>is_leaf_fn</strong> (<em>None</em>) – See <code class="xref py py-func docutils literal notranslate"><span class="pre">TreeNode.traverse()</span></code> for
+documentation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.iter_leaves">
+<span class="sig-name descname"><span class="pre">iter_leaves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_leaf_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.iter_leaves" title="Link to this definition"></a></dt>
+<dd><p>Returns an iterator over the leaves under this node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>is_leaf_fn</strong> (<em>None</em>) – See <code class="xref py py-func docutils literal notranslate"><span class="pre">TreeNode.traverse()</span></code> for
+documentation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.iter_prepostorder">
+<span class="sig-name descname"><span class="pre">iter_prepostorder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_leaf_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.iter_prepostorder" title="Link to this definition"></a></dt>
+<dd><p>Iterate over all nodes in a tree yielding every node in both
+pre and post order. Each iteration returns a postorder flag
+(True if node is being visited in postorder) and a node
+instance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.iter_search_nodes">
+<span class="sig-name descname"><span class="pre">iter_search_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">conditions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.iter_search_nodes" title="Link to this definition"></a></dt>
+<dd><p>Search nodes in an iterative way. Matches are yielded as they
+are being found. This avoids needing to scan the full tree
+topology before returning the first matches. Useful when
+dealing with huge trees.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.ladderize">
+<span class="sig-name descname"><span class="pre">ladderize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.ladderize" title="Link to this definition"></a></dt>
+<dd><p>Sort the branches of a given tree (swapping children nodes)
+according to the size of each partition.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span>  <span class="n">Tree</span><span class="p">(</span><span class="s2">&quot;(f,((d, ((a,b),c)),e));&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span> <span class="n">t</span>
+
+<span class="c1">#</span>
+<span class="c1">#      /-f</span>
+<span class="c1">#     |</span>
+<span class="c1">#     |          /-d</span>
+<span class="c1"># ----|         |</span>
+<span class="c1">#     |     /---|          /-a</span>
+<span class="c1">#     |    |    |     /---|</span>
+<span class="c1">#     |    |     \---|     \-b</span>
+<span class="c1">#      \---|         |</span>
+<span class="c1">#          |          \-c</span>
+<span class="c1">#          |</span>
+<span class="c1">#           \-e</span>
+
+<span class="n">t</span><span class="o">.</span><span class="n">ladderize</span><span class="p">()</span>
+<span class="nb">print</span> <span class="n">t</span>
+
+<span class="c1">#      /-f</span>
+<span class="c1"># ----|</span>
+<span class="c1">#     |     /-e</span>
+<span class="c1">#      \---|</span>
+<span class="c1">#          |     /-d</span>
+<span class="c1">#           \---|</span>
+<span class="c1">#               |     /-c</span>
+<span class="c1">#                \---|</span>
+<span class="c1">#                    |     /-a</span>
+<span class="c1">#                     \---|</span>
+<span class="c1">#                          \-b</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.phonehome">
+<span class="sig-name descname"><span class="pre">phonehome</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.phonehome" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.populate">
+<span class="sig-name descname"><span class="pre">populate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names_library</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reuse_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_branches</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">branch_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">support_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">1)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.populate" title="Link to this definition"></a></dt>
+<dd><p>Generates a random topology by populating current node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>names_library</strong> (<em>None</em>) – If provided, names library
+(list, set, dict, etc.) will be used to name nodes.</p></li>
+<li><p><strong>reuse_names</strong> (<em>False</em>) – If True, node names will not be
+necessarily unique, which makes the process a bit more
+efficient.</p></li>
+<li><p><strong>random_branches</strong> (<em>False</em>) – If True, branch distances and support
+values will be randomized.</p></li>
+<li><p><strong>branch_range</strong> (<em>(</em><em>0</em><em>,</em><em>1</em><em>)</em>) – If random_branches is True, this
+range of values will be used to generate random distances.</p></li>
+<li><p><strong>support_range</strong> (<em>(</em><em>0</em><em>,</em><em>1</em><em>)</em>) – If random_branches is True,
+this range of values will be used to generate random branch
+support values.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.prune">
+<span class="sig-name descname"><span class="pre">prune</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preserve_branch_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.prune" title="Link to this definition"></a></dt>
+<dd><p>Prunes the topology of a node to conserve only the selected list of leaf
+internal nodes. The minimum number of nodes that conserve the
+topological relationships among the requested nodes will be
+retained. Root node is always conserved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>nodes</strong> – a list of node names or node objects that should be retained</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>preserve_branch_length</strong> (<em>False</em>) – If True, branch lengths
+of the deleted nodes are transferred (summed up) to its
+parent’s branch, thus keeping original distances among
+nodes.</p>
+</dd>
+</dl>
+<p><strong>Examples:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">t1</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="s1">&#39;(((((A,B)C)D,E)F,G)H,(I,J)K)root;&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">t1</span><span class="o">.</span><span class="n">prune</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">])</span>
+
+
+<span class="c1">#                /-A</span>
+<span class="c1">#          /D /C|</span>
+<span class="c1">#       /F|      \-B</span>
+<span class="c1">#      |  |</span>
+<span class="c1">#    /H|   \-E</span>
+<span class="c1">#   |  |                        /-A</span>
+<span class="c1">#-root  \-G                 -root</span>
+<span class="c1">#   |                           \-B</span>
+<span class="c1">#   |   /-I</span>
+<span class="c1">#    \K|</span>
+<span class="c1">#       \-J</span>
+
+
+
+<span class="n">t1</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="s1">&#39;(((((A,B)C)D,E)F,G)H,(I,J)K)root;&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">t1</span><span class="o">.</span><span class="n">prune</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">])</span>
+
+<span class="c1">#                /-A</span>
+<span class="c1">#          /D /C|</span>
+<span class="c1">#       /F|      \-B</span>
+<span class="c1">#      |  |</span>
+<span class="c1">#    /H|   \-E</span>
+<span class="c1">#   |  |                              /-A</span>
+<span class="c1">#-root  \-G                  -root- C|</span>
+<span class="c1">#   |                                 \-B</span>
+<span class="c1">#   |   /-I</span>
+<span class="c1">#    \K|</span>
+<span class="c1">#       \-J</span>
+
+
+
+<span class="n">t1</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="s1">&#39;(((((A,B)C)D,E)F,G)H,(I,J)K)root;&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">t1</span><span class="o">.</span><span class="n">prune</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">])</span>
+
+
+<span class="c1">#                /-A</span>
+<span class="c1">#          /D /C|</span>
+<span class="c1">#       /F|      \-B</span>
+<span class="c1">#      |  |</span>
+<span class="c1">#    /H|   \-E                    /-I</span>
+<span class="c1">#   |  |                      -root</span>
+<span class="c1">#-root  \-G                      |   /-A</span>
+<span class="c1">#   |                             \C|</span>
+<span class="c1">#   |   /-I                          \-B</span>
+<span class="c1">#    \K|</span>
+<span class="c1">#       \-J</span>
+
+<span class="n">t1</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="s1">&#39;(((((A,B)C)D,E)F,G)H,(I,J)K)root;&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">t1</span><span class="o">.</span><span class="n">prune</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">])</span>
+
+<span class="c1">#                /-A</span>
+<span class="c1">#          /D /C|</span>
+<span class="c1">#       /F|      \-B</span>
+<span class="c1">#      |  |</span>
+<span class="c1">#    /H|   \-E</span>
+<span class="c1">#   |  |                              /-A</span>
+<span class="c1">#-root  \-G                -root-H /F|</span>
+<span class="c1">#   |                                 \-B</span>
+<span class="c1">#   |   /-I</span>
+<span class="c1">#    \K|</span>
+<span class="c1">#       \-J</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.remove_child">
+<span class="sig-name descname"><span class="pre">remove_child</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">child</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.remove_child" title="Link to this definition"></a></dt>
+<dd><p>Removes a child from this node (parent and child
+nodes still exit but are no longer connected).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.remove_sister">
+<span class="sig-name descname"><span class="pre">remove_sister</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sister</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.remove_sister" title="Link to this definition"></a></dt>
+<dd><p>Removes a sister node. It has the same effect as
+<strong>`TreeNode.up.remove_child(sister)`</strong></p>
+<p>If a sister node is not supplied, the first sister will be deleted
+and returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sister</strong> – A node instance</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The node removed</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree_style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'px'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">90</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.render" title="Link to this definition"></a></dt>
+<dd><p>Renders the node structure as an image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_name</strong> – path to the output image file. valid
+extensions are .SVG, .PDF, .PNG</p></li>
+<li><p><strong>layout</strong> – a layout function or a valid layout function name</p></li>
+<li><p><strong>tree_style</strong> – a <cite>TreeStyle</cite> instance containing the image
+properties</p></li>
+<li><p><strong>units</strong> (<em>px</em>) – “px”: pixels, “mm”: millimeters, “in”: inches</p></li>
+<li><p><strong>h</strong> (<em>None</em>) – height of the image in <code class="xref py py-attr docutils literal notranslate"><span class="pre">units</span></code></p></li>
+<li><p><strong>w</strong> (<em>None</em>) – width of the image in <code class="xref py py-attr docutils literal notranslate"><span class="pre">units</span></code></p></li>
+<li><p><strong>dpi</strong> (<em>90</em>) – dots per inches.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.resolve_polytomy">
+<span class="sig-name descname"><span class="pre">resolve_polytomy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_support</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.resolve_polytomy" title="Link to this definition"></a></dt>
+<dd><p>Resolve all polytomies under current node by creating an
+arbitrary dicotomic structure among the affected nodes. This
+function randomly modifies current tree topology and should
+only be used for compatibility reasons (i.e. programs
+rejecting multifurcated node in the newick representation).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>default_dist</strong> (<em>0.0</em>) – artificial branch distance of new
+nodes.</p></li>
+<li><p><strong>default_support</strong> (<em>0.0</em>) – artificial branch support of new
+nodes.</p></li>
+<li><p><strong>recursive</strong> (<em>True</em>) – Resolve any polytomy under this
+node. When False, only current node will be checked and fixed.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.robinson_foulds">
+<span class="sig-name descname"><span class="pre">robinson_foulds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr_t1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'name'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr_t2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'name'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unrooted_trees</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expand_polytomies</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polytomy_size_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_large_polytomies</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">correct_by_polytomy_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_support_t1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_support_t2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.robinson_foulds" title="Link to this definition"></a></dt>
+<dd><p>Returns the Robinson-Foulds symmetric distance between current
+tree and a different tree instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t2</strong> – reference tree</p></li>
+<li><p><strong>attr_t1</strong> (<em>name</em>) – Compare trees using a custom node
+attribute as a node name.</p></li>
+<li><p><strong>attr_t2</strong> (<em>name</em>) – Compare trees using a custom node
+attribute as a node name in target tree.</p></li>
+<li><p><strong>unrooted_trees</strong> (<em>False</em>) – If True, consider trees as unrooted.</p></li>
+<li><p><strong>expand_polytomies</strong> (<em>False</em>) – If True, all polytomies in the reference
+and target tree will be expanded into all possible binary
+trees. Robinson-foulds distance will be calculated between all
+tree combinations and the minimum value will be returned.
+See also, <code class="xref py py-func docutils literal notranslate"><span class="pre">NodeTree.expand_polytomy()</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(rf, rf_max, common_attrs, names, edges_t1, edges_t2,  discarded_edges_t1, discarded_edges_t2)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.search_nodes">
+<span class="sig-name descname"><span class="pre">search_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">conditions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.search_nodes" title="Link to this definition"></a></dt>
+<dd><p>Returns the list of nodes matching a given set of conditions.</p>
+<p><strong>Example:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tree</span><span class="o">.</span><span class="n">search_nodes</span><span class="p">(</span><span class="n">dist</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;human&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.set_outgroup">
+<span class="sig-name descname"><span class="pre">set_outgroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outgroup</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.set_outgroup" title="Link to this definition"></a></dt>
+<dd><p>Sets a descendant node as the outgroup of a tree.  This function
+can be used to root a tree or even an internal node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>outgroup</strong> – a node instance within the same tree
+structure that will be used as a basal node.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.set_style">
+<span class="sig-name descname"><span class="pre">set_style</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_style</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.set_style" title="Link to this definition"></a></dt>
+<dd><p>Set ‘node_style’ as the fixed style for the current node.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.show">
+<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree_style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ETE'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.show" title="Link to this definition"></a></dt>
+<dd><p>Starts an interactive session to visualize current node
+structure using provided layout and TreeStyle.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.sort_descendants">
+<span class="sig-name descname"><span class="pre">sort_descendants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'name'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.sort_descendants" title="Link to this definition"></a></dt>
+<dd><p>Sort the branches of a given tree by node names. After the
+tree is sorted. Note that if duplicated names are present,
+extra criteria should be added to sort nodes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.standardize">
+<span class="sig-name descname"><span class="pre">standardize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delete_orphan</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preserve_branch_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.standardize" title="Link to this definition"></a></dt>
+<dd><div class="versionadded">
+<p><span class="versionmodified added">Added in version 2.3.</span></p>
+</div>
+<p>process current tree structure to produce a standardized topology: nodes
+with only one child are removed and multifurcations are automatically resolved.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.support">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">support</span></span><a class="headerlink" href="#treewas.tree.TreeWrapper.support" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.swap_children">
+<span class="sig-name descname"><span class="pre">swap_children</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.swap_children" title="Link to this definition"></a></dt>
+<dd><p>Swaps current children order.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.traverse">
+<span class="sig-name descname"><span class="pre">traverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'levelorder'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_leaf_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.traverse" title="Link to this definition"></a></dt>
+<dd><p>Returns an iterator to traverse the tree structure under this
+node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>strategy</strong> (<em>&quot;levelorder&quot;</em>) – set the way in which tree
+will be traversed. Possible values are: “preorder” (first
+parent and then children) ‘postorder’ (first children and
+the parent) and “levelorder” (nodes are visited in order
+from root to leaves)</p></li>
+<li><p><strong>is_leaf_fn</strong> (<em>None</em>) – If supplied, <code class="docutils literal notranslate"><span class="pre">is_leaf_fn</span></code>
+function will be used to interrogate nodes about if they
+are terminal or internal. <code class="docutils literal notranslate"><span class="pre">is_leaf_fn</span></code> function should
+receive a node instance as first argument and return True
+or False. Use this argument to traverse a tree by
+dynamically collapsing internal nodes matching
+<code class="docutils literal notranslate"><span class="pre">is_leaf_fn</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.unroot">
+<span class="sig-name descname"><span class="pre">unroot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'legacy'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.unroot" title="Link to this definition"></a></dt>
+<dd><p>Unroots current node. This function is expected to be used on
+the absolute tree root node, but it can be also be applied to
+any other internal node. It will convert a split into a
+multifurcation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mode</strong> (<em>&quot;legacy&quot;</em>) – The value can be “legacy” or “keep”.</p>
+</dd>
+</dl>
+<p>If value is “keep”, then function keeps the distance between
+the leaves by adding the distance associated to the deleted
+edge to the remaining edge. In the other case the distance
+value of the deleted edge is dropped</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.up">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">up</span></span><a class="headerlink" href="#treewas.tree.TreeWrapper.up" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treewas.tree.TreeWrapper.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_leaf_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_root_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_formatter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">support_formatter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_formatter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quoted_node_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.tree.TreeWrapper.write" title="Link to this definition"></a></dt>
+<dd><p>Returns the newick representation of current node. Several
+arguments control the way in which extra data is shown for
+every node:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>features</strong> – a list of feature names to be exported
+using the Extended Newick Format (i.e. features=[“name”,
+“dist”]). Use an empty list to export all available features
+in each node (features=[])</p></li>
+<li><p><strong>outfile</strong> – writes the output to a given file</p></li>
+<li><p><strong>format</strong> – defines the newick standard used to encode the
+tree. See tutorial for details.</p></li>
+<li><p><strong>format_root_node</strong> (<em>False</em>) – If True, it allows features
+and branch information from root node to be exported as a
+part of the newick text string. For newick compatibility
+reasons, this is False by default.</p></li>
+<li><p><strong>is_leaf_fn</strong> – See <code class="xref py py-func docutils literal notranslate"><span class="pre">TreeNode.traverse()</span></code> for
+documentation.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">t</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;species&quot;</span><span class="p">,</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-treewas.treewas">
+<span id="treewas-treewas-module"></span><h2>treewas.treewas module<a class="headerlink" href="#module-treewas.treewas" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="treewas.treewas.main">
+<span class="sig-prename descclassname"><span class="pre">treewas.treewas.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#treewas.treewas.main" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="treewas.treewas.run_treewas">
+<span class="sig-prename descclassname"><span class="pre">treewas.treewas.</span></span><span class="sig-name descname"><span class="pre">run_treewas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gene_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trait_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trait_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">homoplasy_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_sim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('terminal',</span> <span class="pre">'simultaneous',</span> <span class="pre">'subsequent')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gene_reconstruction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_gene_reconstruction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'parsimony'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trait_reconstruction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_na</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_value_correction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_value_by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'count'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.treewas.run_treewas" title="Link to this definition"></a></dt>
+<dd><p>Wrapper function for <a class="reference internal" href="#module-treewas" title="treewas"><code class="xref py py-func docutils literal notranslate"><span class="pre">treewas()</span></code></a> for command line compatibility</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="treewas.treewas.simulate_loci">
+<span class="sig-prename descclassname"><span class="pre">treewas.treewas.</span></span><span class="sig-name descname"><span class="pre">simulate_loci</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_sim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.treewas.simulate_loci" title="Link to this definition"></a></dt>
+<dd><p>Simulate loci to be used for estimating null distribution of association scores.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_sim</strong> (<em>int</em>) – Number of loci to be simulated. Should be at least then times the number of empirical loci.</p></li>
+<li><p><strong>dist</strong> (<em>numpy.ndarray</em>) – Homoplasy distribution for sampling per locus number of substitutions.</p></li>
+<li><p><strong>tree</strong> (<a class="reference internal" href="#treewas.tree.TreeWrapper" title="treewas.tree.TreeWrapper"><em>TreeWrapper</em></a>) – Reconstructed phylogenetic tree.</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – Seed for pseudo-random number generator. (default is None)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="treewas.treewas.simultaneous_score">
+<span class="sig-prename descclassname"><span class="pre">treewas.treewas.</span></span><span class="sig-name descname"><span class="pre">simultaneous_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rec_genes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rec_traits</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trait_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'discrete'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.treewas.simultaneous_score" title="Link to this definition"></a></dt>
+<dd><p>Calculate treeWAS simultaneous score (score 2).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rec_genes</strong> (<em>pandas.DataFrame</em>) – Binary table containing the empirical genotype and the reconstructed genotype at
+all internal nodes of the tree.</p></li>
+<li><p><strong>rec_traits</strong> (<em>pandas.DataFrame</em>) – Table containing the empirical traits and the reconstructed traits at all
+internal nodes of the tree.</p></li>
+<li><p><strong>edges</strong> (<em>pandas.DataFrame</em>) – A dataframe with parent and child nodes for each edge</p></li>
+<li><p><strong>trait_type</strong> (<em>str</em>) – String indicating the type of trait, either <code class="docutils literal notranslate"><span class="pre">&quot;discrete&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;continuous&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;categorical&quot;</span></code></p></li>
+<li><p><strong>sign</strong> (<em>bool</em>) – Flag indicating whether the returned scores should be signed. (default is True)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> containing the score, rows representing the loci and columns represent traits</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If specified trait_type is not admissible</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="treewas.treewas.subsequent_score">
+<span class="sig-prename descclassname"><span class="pre">treewas.treewas.</span></span><span class="sig-name descname"><span class="pre">subsequent_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rec_genes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rec_traits</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trait_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'discrete'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.treewas.subsequent_score" title="Link to this definition"></a></dt>
+<dd><p>Calculate treeWAS subsequent score (score 3).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rec_genes</strong> (<em>pandas.DataFrame</em>) – Binary table containing the empirical genotype and the reconstructed genotype at all internal
+nodes of the tree.</p></li>
+<li><p><strong>rec_traits</strong> (<em>pandas.DataFrame</em>) – Table containing the empirical traits and the reconstructed traits at all
+internal nodes of the tree.</p></li>
+<li><p><strong>edges</strong> (<em>pandas.DataFrame</em>) – A dataframe with parent and child nodes for each edge</p></li>
+<li><p><strong>trait_type</strong> (<em>str</em>) – String indicating the type of trait,</p></li>
+<li><p><strong>sign</strong> (<em>bool</em>) – Flag indicating whether the returned scores should be signed. (default is True)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Table containing the score, rows representing the loci and columns represent traits</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If specified trait_type is not admissible</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="treewas.treewas.terminal_score">
+<span class="sig-prename descclassname"><span class="pre">treewas.treewas.</span></span><span class="sig-name descname"><span class="pre">terminal_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traits</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trait_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'discrete'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.treewas.terminal_score" title="Link to this definition"></a></dt>
+<dd><p>Calculate treeWAS terminal score (score 1).</p>
+<p>The column names of the gene dataframe need to be the same as the index of the trait dataframe. The order also needs
+to match.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>genes</strong> (<em>pandas.DataFrame</em>) – Table containing binary genetic data. Rows represent loci and columns individuals.</p></li>
+<li><p><strong>traits</strong> (<em>pandas.DataFrame</em>) – Table containing phenotypic data. Rows represent individuals and columns traits.</p></li>
+<li><p><strong>trait_type</strong> (<em>str</em>) – String indicating the type of trait, either <code class="docutils literal notranslate"><span class="pre">&quot;discrete&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;continuous&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;categorical&quot;</span></code></p></li>
+<li><p><strong>sign</strong> (<em>bool</em>) – Flag indicating whether the returned scores should be signed. (default is True)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Table with the terminal scores, where rows represent loci and columns represent traits.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If specified trait_type is not admissible</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="treewas.treewas.treewas">
+<span class="sig-prename descclassname"><span class="pre">treewas.treewas.</span></span><span class="sig-name descname"><span class="pre">treewas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traits</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trait_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_sim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">homoplasy_distribution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('terminal',</span> <span class="pre">'simultaneous',</span> <span class="pre">'subsequent')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gene_reconstruction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_gene_reconstruction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'parsimony'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trait_reconstruction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_value_by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'count'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#treewas.treewas.treewas" title="Link to this definition"></a></dt>
+<dd><p>Run the <em>treeWAS</em> algorithm</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tree</strong> (<a class="reference internal" href="#treewas.tree.TreeWrapper" title="treewas.tree.TreeWrapper"><em>TreeWrapper</em></a>) – A <code class="xref py py-class docutils literal notranslate"><span class="pre">TreeWrapper</span></code> object with the reconstructed phylogeny of the samples. All nodes have to be
+named and the names should correspond to the names of the samples.</p></li>
+<li><p><strong>genes</strong> (<em>:class:pandas.DataFrame</em>) – Table containing binary genetic data. Columns represent isolates and rows represent genes.</p></li>
+<li><p><strong>traits</strong> (<em>:class:pandas.DataFrame</em>) – Table containing trait data, Columns represent traits and rows represent isolates.</p></li>
+<li><p><strong>trait_type</strong> (<em>str</em>) – A string indicating the type of trait, one of <code class="docutils literal notranslate"><span class="pre">discrete</span></code>, <code class="docutils literal notranslate"><span class="pre">continuous</span></code>, or <code class="docutils literal notranslate"><span class="pre">categorical</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary containing pandas DataFrames with the uncorrected p-values. The keys are the values provided
+in <cite>test</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-treewas">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-treewas" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Fabian Gribi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
