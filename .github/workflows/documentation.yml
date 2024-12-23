@@ -22,7 +22,7 @@ jobs:
           uv pip install sphinx sphinx_rtd_theme myst_parser
       - name: Sphinx build
         run: |
-          source venv/bin/activate
+          source .venv/bin/activate
           cd docs
           sphinx-apidoc -o . ../treewas -f
           make html
