@@ -27,6 +27,7 @@ autodoc_default_options = {
     'inherited-members': False,
     'show-inheritance': True,
 }
+autodoc_member_order = "bysource"
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 

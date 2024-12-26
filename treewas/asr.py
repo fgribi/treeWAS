@@ -1,3 +1,7 @@
+"""
+A module for ancestral state reconstruction.
+"""
+
 import numpy as np
 import pandas as pd
 from treewas.tree import TreeWrapper
@@ -7,6 +11,21 @@ pd.options.mode.chained_assignment = None
 
 
 def fitch_downpass(genes, tree):
+    """ The first pass of Fitch's parsimony algorithm.
+
+    Returns preliminary ancestral state sets and per locus parsimony scores.
+
+    :param genes: A DataFrame containing the observed binary genotypes. Each row represents a genetic locus and each
+        column represents an individual from the sample
+    :type genes: pandas.DataFrame
+    :param tree: The reconstructed phylogeny. Names of leaf nodes need to correspond to the names of the individuals.
+        Has to be bifurcating.
+    :type tree: TreeWrapper
+    :return: A tuple containing a DataFrame with the ancestral state sets determined during the first pass.
+        Ambiguous states are represented as the number 2. The second item in the tuple is a Series with the per locus
+        parsimony scores.
+    :rtype: tuple[pandas.DataFrame, pandas.Series]
+    """
     n_loci, __ = genes.shape
     scores = pd.Series(np.zeros(n_loci, dtype=int), index=genes.index)
 
@@ -32,6 +51,20 @@ def fitch_downpass(genes, tree):
 
 
 def fitch_uppass(reconstructed, tree):
+    """ The second pass of Fitch's parsimony algorithm.
+
+    Returns probabilities of being in a particular ancestral state.
+
+    :param reconstructed: A DataFrame containing the reconstructed ancestral state sets. Ambiguous states should be
+        represented as the number two. Each row represents a genetic locus and each column represents an individual from
+        the sample
+    :type reconstructed: pandas.DataFrame
+    :param tree: The reconstructed phylogeny. Names of leaf nodes need to correspond to the names of the individuals.
+        Has to be bifurcating.
+    :type tree: TreeWrapper
+    :return: A DataFrame with the probabilities of being in a particular ancestral state.
+    :rtype: pandas.DataFrame
+    """
     for node in tree.traverse("preorder"):
         if not node.is_leaf() and not node.is_root():
             current = reconstructed.loc[:, node.name]
@@ -60,18 +93,20 @@ def fitch_parsimony(genes, tree, get_scores=False):
     For genes where  the ancestral state is ambiguous, the entry is set to `0.5`, otherwise the entry is either one
     or zero.
 
-    .. note:: Currently only works for binary states.
+    .. note:: Only works for binary states and bifurcating trees.
 
-    :param genes: A table containing the observed binary genotypes. Each row represents a genetic locus and each column
-        represents an individual from the sample
+    :param genes: A DataFrame containing the observed binary genotypes. Entries either have to be boolean or only zeros
+        and ones. Each row represents a genetic locus and each column represents an individual from the sample.
     :type genes: pandas.DataFrame
     :param tree: The reconstructed phylogeny. Names of leaf nodes need to correspond to the names of the individuals.
         Has to be bifurcating.
     :type tree: TreeWrapper
     :param get_scores: If set to True, returns the per locus parsimony scores
     :type get_scores: bool
-    :return: The reconstructed states and possibly the per-site parsimony score
-    :rtype: :class: `pd.DataFrame` | tuple
+    :return: A DataFrame with reconstructed states and if ``get_scores`` is ``True`` a Series with the per-site
+        parsimony score
+    :rtype: pandas.DataFrame | tuple[pandas.DataFrame, pandas.Series]
+    :raise NotImplementedError: if ``genes`` is not binary
 
     References
     ----------

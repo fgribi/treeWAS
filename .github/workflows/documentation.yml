@@ -20,7 +20,7 @@ jobs:
           echo "export PYTHONPATH=$(pwd)/treewas:$PYTHONPATH" >> $GITHUB_ENV
           pwd
           cd docs
-          sphinx-apidoc -o . ../treewas -f
+          sphinx-apidoc -e -o . ../treewas -f
           make html
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3

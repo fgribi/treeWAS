@@ -1,3 +1,6 @@
+"""
+A module for the main logic of the `treeWAS` algorithm.
+"""
 import fire
 import os
 import numpy as np
@@ -84,20 +87,20 @@ def _non_categorical_terminal_score(genes, traits):
 
 
 def terminal_score(genes, traits, trait_type="discrete", sign=True):
-    """Calculate treeWAS terminal score (score 1).
+    """Calculates the  `treeWAS` terminal score (score 1).
 
-    The column names of the gene dataframe need to be the same as the index of the trait dataframe. The order also needs
+    The column names of the gene DataFrame need to be the same as the index of the trait DataFrame. The order also needs
     to match.
 
-    :param genes: Table containing binary genetic data. Rows represent loci and columns individuals.
+    :param genes: A DataFrame containing binary genetic data. Rows represent loci and columns individuals.
     :type genes: pandas.DataFrame
-    :param traits: Table containing phenotypic data. Rows represent individuals and columns traits.
+    :param traits: A DataFrame containing phenotypic data. Rows represent individuals and columns traits.
     :type traits: pandas.DataFrame
     :param trait_type: String indicating the type of trait, either ``"discrete"``, ``"continuous"`` or ``"categorical"``
     :type trait_type: str
     :param sign: Flag indicating whether the returned scores should be signed. (default is True)
     :type sign: bool
-    :return: Table with the terminal scores, where rows represent loci and columns represent traits.
+    :return: DataFrame with the terminal scores, where rows represent loci and columns represent traits.
     :rtype: pandas.DataFrame
     :raise ValueError: If specified trait_type is not admissible
     """
@@ -136,21 +139,21 @@ def _categorical_simultaneous_score(diff_genes, edges, rec_genes, rec_traits):
 
 
 def simultaneous_score(rec_genes, rec_traits, edges, trait_type="discrete", sign=True):
-    """Calculate treeWAS simultaneous score (score 2).
+    """Calculates the `treeWAS` simultaneous score (score 2).
 
-    :param rec_genes: Binary table containing the empirical genotype and the reconstructed genotype at
-        all internal nodes of the tree.
+    :param rec_genes: Binary DataFrame containing the empirical genotype and the reconstructed genotype at
+        all internal nodes of the tree. Rows represent loci and columns nodes in the tree.
     :type rec_genes: pandas.DataFrame
-    :param rec_traits: Table containing the empirical traits and the reconstructed traits at all
+    :param rec_traits: A DataFrame containing the empirical traits and the reconstructed traits at all
             internal nodes of the tree.
     :type rec_traits: pandas.DataFrame
-    :param edges:  A dataframe with parent and child nodes for each edge
+    :param edges:  A DataFrame with parent and child nodes for each edge
     :type edges: pandas.DataFrame
     :param trait_type: String indicating the type of trait, either ``"discrete"``, ``"continuous"`` or ``"categorical"``
     :type trait_type: str
     :param sign: Flag indicating whether the returned scores should be signed. (default is True)
     :type sign: bool
-    :return: ``DataFrame`` containing the score, rows representing the loci and columns represent traits
+    :return: A DataFrame containing the score, rows representing the loci and columns represent traits.
     :rtype: pandas.DataFrame
     :raise ValueError: If specified trait_type is not admissible
     """
@@ -192,23 +195,23 @@ def _non_categorical_subsequent_score(edges, rec_genes, rec_traits):
 
 
 def subsequent_score(rec_genes, rec_traits, edges, trait_type="discrete", sign=True):
-    """Calculate treeWAS subsequent score (score 3).
+    """Calculates the `treeWAS` subsequent score (score 3).
 
-    :param rec_genes: Binary table containing the empirical genotype and the reconstructed genotype at all internal
-            nodes of the tree.
+    :param rec_genes: Binary DataFrame containing the empirical genotype and the reconstructed genotype at all internal
+            nodes of the tree. Rows represent loci and columns nodes in the tree.
     :type rec_genes: pandas.DataFrame
-    :param rec_traits: Table containing the empirical traits and the reconstructed traits at all
+    :param rec_traits: A DataFrame containing the empirical traits and the reconstructed traits at all
             internal nodes of the tree.
     :type rec_traits: pandas.DataFrame
-    :param edges: A dataframe with parent and child nodes for each edge
+    :param edges: A DataFrame with parent and child nodes for each edge
     :type edges: pandas.DataFrame
-    :param trait_type: String indicating the type of trait,
+    :param trait_type: String indicating the type of trait, either ``"discrete"``, ``"continuous"`` or ``"categorical"``.
     :type trait_type: str
-    :param sign: Flag indicating whether the returned scores should be signed. (default is True)
+    :param sign: Flag indicating whether the returned scores should be signed (default is True).
     :type sign: bool
-    :return: Table containing the score, rows representing the loci and columns represent traits
+    :return: A DataFrame containing the score, rows representing the loci and columns represent traits.
     :rtype: pandas.DataFrame
-    :raise ValueError: If specified trait_type is not admissible
+    :raise ValueError: If specified trait_type is not admissible.
     """
     if trait_type not in TRAIT_TYPES:
         raise ValueError(f"Invalid trait type specified. Must be one of {TRAIT_TYPES}")
@@ -232,7 +235,7 @@ def _non_polymorphic(data, leaf_names):
 
 
 def simulate_loci(n_sim, dist, tree, node_names, seed=None):
-    """Simulate loci to be used for estimating null distribution of association scores.
+    """Performs the simulation of genetic loci under the assumption of no association between genotype and phenotype.
 
     :param n_sim: Number of loci to be simulated. Should be at least then times the number of empirical loci.
     :type n_sim: int
@@ -240,8 +243,11 @@ def simulate_loci(n_sim, dist, tree, node_names, seed=None):
     :type dist: numpy.ndarray
     :param tree: Reconstructed phylogenetic tree.
     :type tree: TreeWrapper
+    :param node_names: A list with the names of all the nodes in the tree.
+    :type node_names: list[str]
     :param seed: Seed for pseudo-random number generator. (default is None)
     :type seed: int
+    :return: A DataFrame containing the simulated loci. Rows represent loci and columns nodes in the tree.
     """
 
     def _mutate_loci(data, loci):
@@ -316,8 +322,8 @@ def _reconstruct(states, tree, reconstruction, datatype="discrete"):
     if reconstruction == "parsimony" and datatype == "discrete":
         return fitch_parsimony(states, tree, get_scores=True)
 
-def _handle_reconstruction(genes, traits, tree, trait_type, homoplasy_distribution, gene_reconstruction, trait_reconstruction,
-                           test):
+def _handle_reconstruction(genes, traits, tree, trait_type, homoplasy_distribution, gene_reconstruction,
+                           trait_reconstruction, test):
     rec_genes = genes
     rec_traits = traits
     homoplasy_scores = None
@@ -396,19 +402,43 @@ def treewas(genes,
             trait_reconstruction = None,
             p_value_by="count",
             seed=None):
-    """Run the *treeWAS* algorithm
+    """Runs the *treeWAS* algorithm
 
-    :param tree: A :class:`TreeWrapper` object with the reconstructed phylogeny of the samples. All nodes have to be
-        named and the names should correspond to the names of the samples.
+    :param genes: A DataFrame containing binary genetic data. Columns represent individuals and rows represent loci.
+        Can also contain reconstructed genotypes at internal nodes of the tree. If no reconstruction is provided
+        ``gene_reconstruction`` has to be specified.
+    :type genes: pandas.DataFrame
+    :param traits: A DataFrame containing trait data, Columns represent traits and rows represent isolates. Can also
+        contain reconstructed phenotypes. If no reconstruction is provided, ``trait_reconstruction`` has to be specified.
+    :type traits: pandas.DataFrame
+    :param tree: The reconstructed phylogeny of the samples. All nodes have to be named and the names should correspond
+        to the names of the samples.
     :type tree: TreeWrapper
-    :param genes: Table containing binary genetic data. Columns represent isolates and rows represent genes.
-    :type genes: :class:pandas.DataFrame
-    :param traits: Table containing trait data, Columns represent traits and rows represent isolates.
-    :type traits: :class:pandas.DataFrame
     :param trait_type: A string indicating the type of trait, one of ``discrete``, ``continuous``, or ``categorical``.
     :type trait_type: str
+    :param n_sim: An integer indicating the number of genetic loci to be simulated.
+    :type n_sim: int
+    :param homoplasy_distribution: An array containing distribution of the minimum number of substitutions required to
+        explain the observed genotype
+    :type homoplasy_distribution: numpy.ndarray
+    :param test: A tuple containing the names of the tests to be performed.
+    :type test: tuple[str, ...]
+    :param gene_reconstruction: A string indicating the type of reconstruction to be performed on the genetic data.
+        Either ``parsimony`` or ``ML``.
+    :type gene_reconstruction: str
+    :param sim_gene_reconstruction: A string indicating the type of reconstruction to be performed on the simulated
+        genotype. Either ``parsimony`` or ``ML``.
+    :type sim_gene_reconstruction: str
+    :param trait_reconstruction: A string indicating the type of reconstruction to be performed on the phenotype. Either
+        ``parsimony`` or ``ML``.
+    :type trait_reconstruction: str
+    :param p_value_by: A string indicating the method to calculate the p-values. Either ``count`` or ``density``.
+    :type p_value_by: str
+    :param seed: The seed for the simulation.
+    :type seed: int
     :return: A dictionary containing pandas DataFrames with the uncorrected p-values. The keys are the values provided
         in `test`
+    :rtype: dict[str, pandas.DataFrame]
     """
     n_loci, __ = genes.shape
     leaf_names = tree.get_leaf_names()
@@ -476,7 +506,56 @@ def run_treewas(gene_path,
                 p_value_by="count",
                 seed=None,
                 ):
-    """Wrapper function for :func:`treewas` for command line compatibility"""
+    """Wrapper function for :func:`treewas` for command line compatibility
+
+    Gene and trait input files are expected to be csv like. The delimiter can be specified in ``delimiter``.
+
+    :param gene_path: The path to the file containing the gene data. In the file, columns should represent
+        individuals and rows should represent loci. Can also contain reconstructed genotypes at internal nodes of the
+        tree. If no reconstruction is provided ``gene_reconstruction`` has to be specified.
+    :type gene_path: str
+    :param trait_path: The path to the file containing the trait data. Columns should represent traits and
+        rows should represent isolates. Can also contain reconstructed phenotypes. If no reconstruction is provided,
+        ``trait_reconstruction`` has to be specified.
+    :type trait_path: str
+    :param tree_path: The path to the Newick file with the reconstructed phylogeny of the sample. All nodes have to be
+        named and the names should correspond to the names of the samples.
+    :type tree_path: str
+    :param out_dir: Path to the directory where the ouput should be written.
+    :type out_dir: str
+    :param trait_type: A string indicating the type of trait, one of ``discrete``, ``continuous``, or ``categorical``.
+    :type trait_type: str
+    :param delimiter: The delimiter that is used in the input files. Defaults to ``","``.
+    :type delimiter: str
+    :param homoplasy_path: The path to the text file containing the homoplasy distribution.
+    :type homoplasy_path: str
+    :param n_sim: An integer indicating the number of genetic loci to be simulated.
+    :type n_sim: int
+    :param test: A tuple containing the names of the tests to be performed.
+    :type test: tuple[str, ...]
+    :param gene_reconstruction: A string indicating the type of reconstruction to be performed on the genetic data.
+        Either ``parsimony`` or ``ML``.
+    :type gene_reconstruction: str
+    :param sim_gene_reconstruction: A string indicating the type of reconstruction to be performed on the simulated
+        genotype. Either ``parsimony`` or ``ML``.
+    :type sim_gene_reconstruction: str
+    :param trait_reconstruction: A string indicating the type of reconstruction to be performed on the phenotype. Either
+        ``parsimony`` or ``ML``.
+    :type trait_reconstruction: str
+    :param filter_na: A boolean indicating whether to filter out loci that contain more than 75% missing values.
+    :type filter_na: bool
+    :param base_p: The base p-value cutoff for determining significant loci.
+    :type base_p: float
+    :param p_value_correction: A string indicating which method to use for p-value correction.
+    :type p_value_by: str
+    :param p_value_by: A string indicating the method to calculate the p-values. Either ``count`` or ``density``.
+    :type p_value_by: str
+    :param seed: The seed for the simulation.
+    :type seed: int
+    :return: A dictionary containing pandas DataFrames with the uncorrected p-values. The keys are the values provided
+        in ``test``.
+    :rtype: dict[str, pandas.DataFrame]
+    """
 
     if trait_type not in TRAIT_TYPES:
         raise ValueError(f"Invalid trait type specified. Must be one of {TRAIT_TYPES}")

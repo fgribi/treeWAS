@@ -1,6 +1,17 @@
 # *treeWAS* Python Package
 
-This is a Python implementation of the *treeWAS* algorithm [[1]](#1). Also make sure to check the original *[R package](https://github.com/caitiecollins/treeWAS/)*
+This is a Python implementation of the *treeWAS* algorithm [[1]](#1). Also make sure to check the original *[R package](https://github.com/caitiecollins/treeWAS/)*.
+
+## Installation
+
+To install, first clone the repo using
+    git clone https://github.com/fgribi/treeWAS.git
+and then run 
+    pip install .
+
+## Documentation
+
+The API documentation can be found *[here](https://fgribi.github.io/treeWAS/)*
 
 ----
 ## References
