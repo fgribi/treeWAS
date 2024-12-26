@@ -1,0 +1,218 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>treewas.asr module &mdash; treeWAS  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="treewas.tree module" href="treewas.tree.html" />
+    <link rel="prev" title="treewas package" href="treewas.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            treeWAS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">treewas</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="treewas.html">treewas package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="treewas.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">treewas.asr module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="treewas.tree.html">treewas.tree module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="treewas.tw.html">treewas.tw module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="treewas.html#module-treewas">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">treeWAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">treewas</a></li>
+          <li class="breadcrumb-item"><a href="treewas.html">treewas package</a></li>
+      <li class="breadcrumb-item active">treewas.asr module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/treewas.asr.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-treewas.asr">
+<span id="treewas-asr-module"></span><h1>treewas.asr module<a class="headerlink" href="#module-treewas.asr" title="Link to this heading"></a></h1>
+<p>A module for ancestral state reconstruction.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="treewas.asr.fitch_downpass">
+<span class="sig-prename descclassname"><span class="pre">treewas.asr.</span></span><span class="sig-name descname"><span class="pre">fitch_downpass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treewas/asr.html#fitch_downpass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treewas.asr.fitch_downpass" title="Link to this definition"></a></dt>
+<dd><p>The first pass of Fitch’s parsimony algorithm.</p>
+<p>Returns preliminary ancestral state sets and per locus parsimony scores.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>genes</strong> (<em>pandas.DataFrame</em>) – A DataFrame containing the observed binary genotypes. Each row represents a genetic locus and each
+column represents an individual from the sample</p></li>
+<li><p><strong>tree</strong> (<a class="reference internal" href="treewas.tree.html#treewas.tree.TreeWrapper" title="treewas.tree.TreeWrapper"><em>TreeWrapper</em></a>) – The reconstructed phylogeny. Names of leaf nodes need to correspond to the names of the individuals.
+Has to be bifurcating.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing a DataFrame with the ancestral state sets determined during the first pass.
+Ambiguous states are represented as the number 2. The second item in the tuple is a Series with the per locus
+parsimony scores.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[pandas.DataFrame, pandas.Series]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="treewas.asr.fitch_uppass">
+<span class="sig-prename descclassname"><span class="pre">treewas.asr.</span></span><span class="sig-name descname"><span class="pre">fitch_uppass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reconstructed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treewas/asr.html#fitch_uppass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treewas.asr.fitch_uppass" title="Link to this definition"></a></dt>
+<dd><p>The second pass of Fitch’s parsimony algorithm.</p>
+<p>Returns probabilities of being in a particular ancestral state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reconstructed</strong> (<em>pandas.DataFrame</em>) – A DataFrame containing the reconstructed ancestral state sets. Ambiguous states should be
+represented as the number two. Each row represents a genetic locus and each column represents an individual from
+the sample</p></li>
+<li><p><strong>tree</strong> (<a class="reference internal" href="treewas.tree.html#treewas.tree.TreeWrapper" title="treewas.tree.TreeWrapper"><em>TreeWrapper</em></a>) – The reconstructed phylogeny. Names of leaf nodes need to correspond to the names of the individuals.
+Has to be bifurcating.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A DataFrame with the probabilities of being in a particular ancestral state.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="treewas.asr.fitch_parsimony">
+<span class="sig-prename descclassname"><span class="pre">treewas.asr.</span></span><span class="sig-name descname"><span class="pre">fitch_parsimony</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_scores</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treewas/asr.html#fitch_parsimony"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treewas.asr.fitch_parsimony" title="Link to this definition"></a></dt>
+<dd><p>Perform Fitch’s parsimony algorithm</p>
+<p>Reconstructs ancestral state sets using Fitch’s algorithm <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> and if <code class="docutils literal notranslate"><span class="pre">get_scores</span></code>
+is <code class="docutils literal notranslate"><span class="pre">True</span></code>, the per locus parsimony scores will be returned.</p>
+<p>For genes where  the ancestral state is ambiguous, the entry is set to <cite>0.5</cite>, otherwise the entry is either one
+or zero.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only works for binary states and bifurcating trees.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>genes</strong> (<em>pandas.DataFrame</em>) – A DataFrame containing the observed binary genotypes. Entries either have to be boolean or only zeros
+and ones. Each row represents a genetic locus and each column represents an individual from the sample.</p></li>
+<li><p><strong>tree</strong> (<a class="reference internal" href="treewas.tree.html#treewas.tree.TreeWrapper" title="treewas.tree.TreeWrapper"><em>TreeWrapper</em></a>) – The reconstructed phylogeny. Names of leaf nodes need to correspond to the names of the individuals.
+Has to be bifurcating.</p></li>
+<li><p><strong>get_scores</strong> (<em>bool</em>) – If set to True, returns the per locus parsimony scores</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A DataFrame with reconstructed states and if <code class="docutils literal notranslate"><span class="pre">get_scores</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code> a Series with the per-site
+parsimony score</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame | tuple[pandas.DataFrame, pandas.Series]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – if <code class="docutils literal notranslate"><span class="pre">genes</span></code> is not binary</p>
+</dd>
+</dl>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading"></a></h2>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>W. M. Fitch, <em>Toward Defining the Course of Evolution: Minimum Change for a Specific Tree Topology</em>,
+Systematic Biology,  1971, <a class="reference external" href="https://doi.org/10.1093/sysbio/20.4.406">https://doi.org/10.1093/sysbio/20.4.406</a>.</p>
+</aside>
+</aside>
+</section>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="treewas.html" class="btn btn-neutral float-left" title="treewas package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="treewas.tree.html" class="btn btn-neutral float-right" title="treewas.tree module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Fabian Gribi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

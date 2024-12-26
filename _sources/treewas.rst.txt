@@ -1,0 +1,20 @@
+treewas package
+===============
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   treewas.asr
+   treewas.tree
+   treewas.tw
+
+Module contents
+---------------
+
+.. automodule:: treewas
+   :members:
+   :undoc-members:
+   :show-inheritance:

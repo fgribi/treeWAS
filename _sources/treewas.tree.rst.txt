@@ -1,0 +1,7 @@
+treewas.tree module
+===================
+
+.. automodule:: treewas.tree
+   :members:
+   :undoc-members:
+   :show-inheritance:

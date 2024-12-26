@@ -1,0 +1,714 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>treewas.tw &mdash; treeWAS  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            treeWAS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">treewas</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">treeWAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">treewas.tw</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for treewas.tw</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">A module for the main logic of the `treeWAS` algorithm.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">fire</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">chi2_contingency</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>
+
+<span class="kn">from</span> <span class="nn">treewas.asr</span> <span class="kn">import</span> <span class="n">fitch_parsimony</span><span class="p">,</span> <span class="n">fitch_downpass</span>
+<span class="kn">from</span> <span class="nn">treewas.tree</span> <span class="kn">import</span> <span class="n">TreeWrapper</span>
+
+<span class="n">TRAIT_TYPES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;discrete&quot;</span><span class="p">,</span> <span class="s2">&quot;continuous&quot;</span><span class="p">,</span> <span class="s2">&quot;categorical&quot;</span><span class="p">]</span>
+<span class="n">RECONSTRUCTION_TYPES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;parsimony&quot;</span><span class="p">,</span> <span class="s2">&quot;ML&quot;</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_nandot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matrix dot product without NaN propagation.&quot;&quot;&quot;</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+    <span class="n">dot_product</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dot_product</span>
+
+
+<span class="k">def</span> <span class="nf">_normalize</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="mi">0</span> <span class="o">+</span> <span class="n">data</span> <span class="o">-</span> <span class="n">data</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="mi">0</span> <span class="o">+</span> <span class="n">data</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">data</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+
+
+<span class="k">def</span> <span class="nf">_get_anc_dec</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">anc</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">edges</span><span class="p">[</span><span class="s2">&quot;parent&quot;</span><span class="p">]]</span>
+        <span class="n">desc</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">edges</span><span class="p">[</span><span class="s2">&quot;child&quot;</span><span class="p">]]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">anc</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">edges</span><span class="p">[</span><span class="s2">&quot;parent&quot;</span><span class="p">],</span> <span class="p">:]</span>
+        <span class="n">desc</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">edges</span><span class="p">[</span><span class="s2">&quot;child&quot;</span><span class="p">],</span> <span class="p">:]</span>
+
+    <span class="k">return</span> <span class="n">anc</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span> <span class="n">desc</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+
+
+<span class="k">def</span> <span class="nf">_row_chi_square</span><span class="p">(</span><span class="n">row</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+    <span class="c1"># Calculating the contigency table as below is significantly faster than using pd.crosstab</span>
+    <span class="n">row_mask</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="n">col_mask</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="o">~</span><span class="p">(</span><span class="n">row_mask</span> <span class="o">|</span> <span class="n">col_mask</span><span class="p">)</span>
+    <span class="n">filtered_row</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+    <span class="n">filtered_col</span> <span class="o">=</span> <span class="n">col</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+    <span class="n">unique_row</span><span class="p">,</span> <span class="n">row_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">filtered_row</span><span class="p">,</span> <span class="n">return_inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">unique_col</span><span class="p">,</span> <span class="n">col_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">filtered_col</span><span class="p">,</span> <span class="n">return_inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">contingency_table</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">unique_row</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_col</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">contingency_table</span><span class="p">,</span> <span class="p">(</span><span class="n">row_indices</span><span class="p">,</span> <span class="n">col_indices</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Skip chi-squared if table is degenerate</span>
+    <span class="k">if</span> <span class="n">contingency_table</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">contingency_table</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">contingency_table</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="n">score</span><span class="p">,</span> <span class="o">*</span><span class="n">__</span> <span class="o">=</span> <span class="n">chi2_contingency</span><span class="p">(</span><span class="n">contingency_table</span><span class="p">,</span> <span class="n">correction</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">score</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">col</span><span class="p">))</span> <span class="o">**</span> <span class="mf">0.5</span>
+
+
+<span class="k">def</span> <span class="nf">_chi_square</span><span class="p">(</span><span class="n">genes</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">traits</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="n">n_loci</span><span class="p">,</span> <span class="n">__</span> <span class="o">=</span> <span class="n">genes</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">__</span><span class="p">,</span> <span class="n">n_traits</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_loci</span><span class="p">,</span> <span class="n">n_traits</span><span class="p">))</span>
+
+    <span class="c1"># TODO: find a better way if possible. Pandas apply is very inefficient.</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">trait</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">traits</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+            <span class="n">scores</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">genes</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">_row_chi_square</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">traits</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">trait</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_non_categorical_terminal_score</span><span class="p">(</span><span class="n">genes</span><span class="p">,</span> <span class="n">traits</span><span class="p">):</span>
+    <span class="n">__</span><span class="p">,</span> <span class="n">n_ind</span> <span class="o">=</span> <span class="n">genes</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">genes</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="p">(</span><span class="n">_nandot</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="o">-</span>
+              <span class="n">_nandot</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span> <span class="o">-</span>
+              <span class="n">_nandot</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">g</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="o">+</span>
+              <span class="n">_nandot</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">g</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">t</span><span class="p">))</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">scores</span> <span class="o">/</span> <span class="n">n_ind</span>
+    <span class="n">scores_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">scores_df</span>
+
+
+<div class="viewcode-block" id="terminal_score">
+<a class="viewcode-back" href="../../treewas.tw.html#treewas.tw.terminal_score">[docs]</a>
+<span class="k">def</span> <span class="nf">terminal_score</span><span class="p">(</span><span class="n">genes</span><span class="p">,</span> <span class="n">traits</span><span class="p">,</span> <span class="n">trait_type</span><span class="o">=</span><span class="s2">&quot;discrete&quot;</span><span class="p">,</span> <span class="n">sign</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates the  `treeWAS` terminal score (score 1).</span>
+
+<span class="sd">    The column names of the gene DataFrame need to be the same as the index of the trait DataFrame. The order also needs</span>
+<span class="sd">    to match.</span>
+
+<span class="sd">    :param genes: A DataFrame containing binary genetic data. Rows represent loci and columns individuals.</span>
+<span class="sd">    :type genes: pandas.DataFrame</span>
+<span class="sd">    :param traits: A DataFrame containing phenotypic data. Rows represent individuals and columns traits.</span>
+<span class="sd">    :type traits: pandas.DataFrame</span>
+<span class="sd">    :param trait_type: String indicating the type of trait, either ``&quot;discrete&quot;``, ``&quot;continuous&quot;`` or ``&quot;categorical&quot;``</span>
+<span class="sd">    :type trait_type: str</span>
+<span class="sd">    :param sign: Flag indicating whether the returned scores should be signed. (default is True)</span>
+<span class="sd">    :type sign: bool</span>
+<span class="sd">    :return: DataFrame with the terminal scores, where rows represent loci and columns represent traits.</span>
+<span class="sd">    :rtype: pandas.DataFrame</span>
+<span class="sd">    :raise ValueError: If specified trait_type is not admissible</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">trait_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">TRAIT_TYPES</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid trait type specified. Must be one of </span><span class="si">{</span><span class="n">TRAIT_TYPES</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+    <span class="k">if</span> <span class="n">trait_type</span> <span class="o">==</span> <span class="s2">&quot;categorical&quot;</span><span class="p">:</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">_chi_square</span><span class="p">(</span><span class="n">genes</span><span class="p">,</span> <span class="n">traits</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">traits</span> <span class="o">=</span> <span class="n">_normalize</span><span class="p">(</span><span class="n">traits</span><span class="p">)</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">_non_categorical_terminal_score</span><span class="p">(</span><span class="n">genes</span><span class="p">,</span> <span class="n">traits</span><span class="p">)</span>
+
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">genes</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">scores</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">columns</span>
+
+    <span class="k">return</span> <span class="n">scores</span> <span class="k">if</span> <span class="n">sign</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">_categorical_simultaneous_score</span><span class="p">(</span><span class="n">diff_genes</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">rec_genes</span><span class="p">,</span> <span class="n">rec_traits</span><span class="p">):</span>
+    <span class="n">unique_values</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">rec_traits</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+    <span class="n">categories</span> <span class="o">=</span> <span class="n">unique_values</span><span class="p">[</span><span class="o">~</span><span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">unique_values</span><span class="p">)]</span>
+    <span class="n">n_loci</span><span class="p">,</span> <span class="n">__</span> <span class="o">=</span> <span class="n">rec_genes</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">__</span><span class="p">,</span> <span class="n">n_traits</span> <span class="o">=</span> <span class="n">rec_traits</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_loci</span><span class="p">,</span> <span class="n">n_traits</span><span class="p">))</span>
+
+    <span class="c1"># Examine only changes between two specific categorical values at a time</span>
+    <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="n">categories</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="n">pair_traits</span> <span class="o">=</span> <span class="n">rec_traits</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">pair</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">pair_traits</span><span class="p">[</span><span class="o">~</span><span class="n">pair_traits</span><span class="o">.</span><span class="n">isin</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">})]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="n">anc_pair_traits</span><span class="p">,</span> <span class="n">desc_pair_traits</span> <span class="o">=</span> <span class="n">_get_anc_dec</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">pair_traits</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">diff_pair_traits</span> <span class="o">=</span> <span class="n">anc_pair_traits</span> <span class="o">-</span> <span class="n">desc_pair_traits</span>
+        <span class="n">diff_pair_traits</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">diff_pair_traits</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">scores</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">diff_genes</span> <span class="o">@</span> <span class="n">diff_pair_traits</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">scores</span>
+
+
+<div class="viewcode-block" id="simultaneous_score">
+<a class="viewcode-back" href="../../treewas.tw.html#treewas.tw.simultaneous_score">[docs]</a>
+<span class="k">def</span> <span class="nf">simultaneous_score</span><span class="p">(</span><span class="n">rec_genes</span><span class="p">,</span> <span class="n">rec_traits</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">trait_type</span><span class="o">=</span><span class="s2">&quot;discrete&quot;</span><span class="p">,</span> <span class="n">sign</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates the `treeWAS` simultaneous score (score 2).</span>
+
+<span class="sd">    :param rec_genes: Binary DataFrame containing the empirical genotype and the reconstructed genotype at</span>
+<span class="sd">        all internal nodes of the tree. Rows represent loci and columns nodes in the tree.</span>
+<span class="sd">    :type rec_genes: pandas.DataFrame</span>
+<span class="sd">    :param rec_traits: A DataFrame containing the empirical traits and the reconstructed traits at all</span>
+<span class="sd">            internal nodes of the tree.</span>
+<span class="sd">    :type rec_traits: pandas.DataFrame</span>
+<span class="sd">    :param edges:  A DataFrame with parent and child nodes for each edge</span>
+<span class="sd">    :type edges: pandas.DataFrame</span>
+<span class="sd">    :param trait_type: String indicating the type of trait, either ``&quot;discrete&quot;``, ``&quot;continuous&quot;`` or ``&quot;categorical&quot;``</span>
+<span class="sd">    :type trait_type: str</span>
+<span class="sd">    :param sign: Flag indicating whether the returned scores should be signed. (default is True)</span>
+<span class="sd">    :type sign: bool</span>
+<span class="sd">    :return: A DataFrame containing the score, rows representing the loci and columns represent traits.</span>
+<span class="sd">    :rtype: pandas.DataFrame</span>
+<span class="sd">    :raise ValueError: If specified trait_type is not admissible</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">trait_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">TRAIT_TYPES</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid trait type specified. Must be one of </span><span class="si">{</span><span class="n">TRAIT_TYPES</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">anc_genes</span><span class="p">,</span> <span class="n">desc_genes</span> <span class="o">=</span> <span class="n">_get_anc_dec</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">rec_genes</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">diff_genes</span> <span class="o">=</span> <span class="n">anc_genes</span> <span class="o">-</span> <span class="n">desc_genes</span>
+
+    <span class="k">if</span> <span class="n">trait_type</span> <span class="o">==</span> <span class="s2">&quot;categorical&quot;</span><span class="p">:</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">_categorical_simultaneous_score</span><span class="p">(</span><span class="n">diff_genes</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">rec_genes</span><span class="p">,</span> <span class="n">rec_traits</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rec_traits</span> <span class="o">=</span> <span class="n">_normalize</span><span class="p">(</span><span class="n">rec_traits</span><span class="p">)</span>
+        <span class="n">anc_traits</span><span class="p">,</span> <span class="n">desc_traits</span> <span class="o">=</span> <span class="n">_get_anc_dec</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">rec_traits</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">diff_traits</span> <span class="o">=</span> <span class="n">anc_traits</span> <span class="o">-</span> <span class="n">desc_traits</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">_nandot</span><span class="p">(</span><span class="n">diff_genes</span><span class="p">,</span> <span class="n">diff_traits</span><span class="p">)</span>
+
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">rec_genes</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">rec_traits</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">scores</span> <span class="k">if</span> <span class="n">sign</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">_non_categorical_subsequent_score</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">rec_genes</span><span class="p">,</span> <span class="n">rec_traits</span><span class="p">):</span>
+    <span class="n">n_edges</span><span class="p">,</span> <span class="n">__</span> <span class="o">=</span> <span class="n">edges</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">anc_genes</span><span class="p">,</span> <span class="n">desc_genes</span> <span class="o">=</span> <span class="n">_get_anc_dec</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">rec_genes</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">anc_traits</span><span class="p">,</span> <span class="n">desc_traits</span> <span class="o">=</span> <span class="n">_get_anc_dec</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">rec_traits</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">anc_genes</span> <span class="o">=</span> <span class="n">anc_genes</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+    <span class="n">desc_genes</span> <span class="o">=</span> <span class="n">desc_genes</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+    <span class="n">anc_traits</span> <span class="o">=</span> <span class="n">anc_traits</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+    <span class="n">desc_traits</span> <span class="o">=</span> <span class="n">desc_traits</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">anc_genes</span> <span class="o">*</span> <span class="n">anc_traits</span> <span class="o">+</span>
+              <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">desc_genes</span> <span class="o">*</span> <span class="n">anc_traits</span> <span class="o">+</span>
+              <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">anc_genes</span> <span class="o">*</span> <span class="n">desc_traits</span> <span class="o">+</span>
+              <span class="mi">4</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">desc_genes</span> <span class="o">*</span> <span class="n">desc_traits</span> <span class="o">-</span>
+              <span class="n">anc_genes</span> <span class="o">-</span> <span class="n">desc_genes</span> <span class="o">-</span> <span class="n">anc_traits</span> <span class="o">-</span> <span class="n">desc_traits</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">scores</span> <span class="o">/</span> <span class="n">n_edges</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">scores</span>
+
+
+<div class="viewcode-block" id="subsequent_score">
+<a class="viewcode-back" href="../../treewas.tw.html#treewas.tw.subsequent_score">[docs]</a>
+<span class="k">def</span> <span class="nf">subsequent_score</span><span class="p">(</span><span class="n">rec_genes</span><span class="p">,</span> <span class="n">rec_traits</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">trait_type</span><span class="o">=</span><span class="s2">&quot;discrete&quot;</span><span class="p">,</span> <span class="n">sign</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates the `treeWAS` subsequent score (score 3).</span>
+
+<span class="sd">    :param rec_genes: Binary DataFrame containing the empirical genotype and the reconstructed genotype at all internal</span>
+<span class="sd">            nodes of the tree. Rows represent loci and columns nodes in the tree.</span>
+<span class="sd">    :type rec_genes: pandas.DataFrame</span>
+<span class="sd">    :param rec_traits: A DataFrame containing the empirical traits and the reconstructed traits at all</span>
+<span class="sd">            internal nodes of the tree.</span>
+<span class="sd">    :type rec_traits: pandas.DataFrame</span>
+<span class="sd">    :param edges: A DataFrame with parent and child nodes for each edge</span>
+<span class="sd">    :type edges: pandas.DataFrame</span>
+<span class="sd">    :param trait_type: String indicating the type of trait, either ``&quot;discrete&quot;``, ``&quot;continuous&quot;`` or ``&quot;categorical&quot;``.</span>
+<span class="sd">    :type trait_type: str</span>
+<span class="sd">    :param sign: Flag indicating whether the returned scores should be signed (default is True).</span>
+<span class="sd">    :type sign: bool</span>
+<span class="sd">    :return: A DataFrame containing the score, rows representing the loci and columns represent traits.</span>
+<span class="sd">    :rtype: pandas.DataFrame</span>
+<span class="sd">    :raise ValueError: If specified trait_type is not admissible.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">trait_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">TRAIT_TYPES</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid trait type specified. Must be one of </span><span class="si">{</span><span class="n">TRAIT_TYPES</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">trait_type</span> <span class="o">==</span> <span class="s2">&quot;categorical&quot;</span><span class="p">:</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">_chi_square</span><span class="p">(</span><span class="n">rec_genes</span><span class="p">,</span> <span class="n">rec_traits</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rec_traits</span> <span class="o">=</span> <span class="n">_normalize</span><span class="p">(</span><span class="n">rec_traits</span><span class="p">)</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">_non_categorical_subsequent_score</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">rec_genes</span><span class="p">,</span> <span class="n">rec_traits</span><span class="p">)</span>
+
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">rec_genes</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">scores</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">rec_traits</span><span class="o">.</span><span class="n">columns</span>
+
+    <span class="k">return</span> <span class="n">scores</span> <span class="k">if</span> <span class="n">sign</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">_non_polymorphic</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">leaf_names</span><span class="p">):</span>
+    <span class="c1"># Much faster to just convert the pandas DataFrame to numpy and do it like this than to use nunique</span>
+    <span class="n">leaf_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">leaf_names</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">leaf_data</span> <span class="o">==</span> <span class="n">leaf_data</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="simulate_loci">
+<a class="viewcode-back" href="../../treewas.tw.html#treewas.tw.simulate_loci">[docs]</a>
+<span class="k">def</span> <span class="nf">simulate_loci</span><span class="p">(</span><span class="n">n_sim</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">node_names</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Performs the simulation of genetic loci under the assumption of no association between genotype and phenotype.</span>
+
+<span class="sd">    :param n_sim: Number of loci to be simulated. Should be at least then times the number of empirical loci.</span>
+<span class="sd">    :type n_sim: int</span>
+<span class="sd">    :param dist: Homoplasy distribution for sampling per locus number of substitutions.</span>
+<span class="sd">    :type dist: numpy.ndarray</span>
+<span class="sd">    :param tree: Reconstructed phylogenetic tree.</span>
+<span class="sd">    :type tree: TreeWrapper</span>
+<span class="sd">    :param node_names: A list with the names of all the nodes in the tree.</span>
+<span class="sd">    :type node_names: list[str]</span>
+<span class="sd">    :param seed: Seed for pseudo-random number generator. (default is None)</span>
+<span class="sd">    :type seed: int</span>
+<span class="sd">    :return: A DataFrame containing the simulated loci. Rows represent loci and columns nodes in the tree.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_mutate_loci</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">loci</span><span class="p">):</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">loci</span><span class="p">)</span>
+        <span class="n">roots</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">tree</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">roots</span>
+
+        <span class="c1"># Draw the branches for the substitutions for each locus</span>
+        <span class="n">subs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">length_dist</span><span class="p">),</span> <span class="n">n</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">locus</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">loci</span><span class="p">):</span>
+            <span class="n">sub_ind</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">length_dist</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="n">n_subs</span><span class="p">[</span><span class="n">locus</span><span class="p">],</span> <span class="n">p</span><span class="o">=</span><span class="n">length_dist</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">subs</span><span class="p">[</span><span class="n">sub_ind</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># Mutate the loci where it is indicated by subs</span>
+        <span class="k">for</span> <span class="n">edge</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">traverse</span><span class="p">(</span><span class="s2">&quot;preorder&quot;</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">node</span><span class="o">.</span><span class="n">is_root</span><span class="p">():</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">up</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+                <span class="n">current_subs</span> <span class="o">=</span> <span class="n">subs</span><span class="p">[</span><span class="n">edge</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">current_subs</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="o">~</span><span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">current_subs</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">up</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">sim_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_sim</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">node_names</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="n">node_names</span><span class="p">)</span>
+    <span class="n">branch_lengths</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">edge_df</span><span class="p">[</span><span class="s2">&quot;length&quot;</span><span class="p">]</span>
+    <span class="n">length_dist</span> <span class="o">=</span> <span class="n">branch_lengths</span> <span class="o">/</span> <span class="n">branch_lengths</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">leaf_names</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">get_leaf_names</span><span class="p">()</span>
+
+    <span class="c1"># Draw number of subs from homoplasy distribution. Add one, since the distribution does not include probability for</span>
+    <span class="c1"># zero substitutions</span>
+    <span class="n">n_subs</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_sim</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">dist</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">sim_data</span> <span class="o">=</span> <span class="n">_mutate_loci</span><span class="p">(</span><span class="n">sim_data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_sim</span><span class="p">))</span>
+    <span class="n">non_polymorphic</span> <span class="o">=</span> <span class="n">_non_polymorphic</span><span class="p">(</span><span class="n">sim_data</span><span class="p">,</span> <span class="n">leaf_names</span><span class="p">)</span>
+
+    <span class="c1"># The simulated loci should all be polymorphic</span>
+    <span class="k">while</span> <span class="n">non_polymorphic</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="n">non_polymorphic_loci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">non_polymorphic</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">sim_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">non_polymorphic</span><span class="p">]</span> <span class="o">=</span> <span class="n">_mutate_loci</span><span class="p">(</span><span class="n">sim_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">non_polymorphic</span><span class="p">],</span> <span class="n">non_polymorphic_loci</span><span class="p">)</span>
+        <span class="n">non_polymorphic</span> <span class="o">=</span> <span class="n">_non_polymorphic</span><span class="p">(</span><span class="n">sim_data</span><span class="p">,</span> <span class="n">leaf_names</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">sim_data</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">_get_distribution</span><span class="p">(</span><span class="n">scores</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Constructs a distribution from a ``pd.Series`` containing discrete values.&quot;&quot;&quot;</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+    <span class="n">full_counts</span> <span class="o">=</span> <span class="n">counts</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">scores</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Scores that are zero are disregarded</span>
+    <span class="n">full_counts</span> <span class="o">=</span> <span class="n">full_counts</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">full_counts</span> <span class="o">/</span> <span class="n">full_counts</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">dist</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">_reconstruct</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">reconstruction</span><span class="p">,</span> <span class="n">datatype</span><span class="o">=</span><span class="s2">&quot;discrete&quot;</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">reconstruction</span> <span class="ow">not</span> <span class="ow">in</span>  <span class="n">RECONSTRUCTION_TYPES</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reconstruction method must be one of </span><span class="si">{</span><span class="n">RECONSTRUCTION_TYPES</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">datatype</span> <span class="o">==</span> <span class="s2">&quot;continuous&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Ancestral state reconstruction for continuous states is not yet implemented.&quot;</span><span class="p">)</span>
+        <span class="c1"># TODO implement</span>
+
+    <span class="k">if</span> <span class="n">datatype</span> <span class="o">==</span> <span class="s2">&quot;categorical&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Ancestral state reconstruction for categorical states is not yet implemented.&quot;</span><span class="p">)</span>
+        <span class="c1"># TODO implement</span>
+
+    <span class="k">if</span> <span class="n">reconstruction</span> <span class="o">==</span> <span class="s2">&quot;ML&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Ancestral state reconstruction using maximum-likelihood is not yet implemented.&quot;</span><span class="p">)</span>
+        <span class="c1"># TODO implement</span>
+
+    <span class="k">if</span> <span class="n">reconstruction</span> <span class="o">==</span> <span class="s2">&quot;parsimony&quot;</span> <span class="ow">and</span> <span class="n">datatype</span> <span class="o">==</span> <span class="s2">&quot;discrete&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">fitch_parsimony</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">get_scores</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_handle_reconstruction</span><span class="p">(</span><span class="n">genes</span><span class="p">,</span> <span class="n">traits</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">trait_type</span><span class="p">,</span> <span class="n">homoplasy_distribution</span><span class="p">,</span> <span class="n">gene_reconstruction</span><span class="p">,</span>
+                           <span class="n">trait_reconstruction</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+    <span class="n">rec_genes</span> <span class="o">=</span> <span class="n">genes</span>
+    <span class="n">rec_traits</span> <span class="o">=</span> <span class="n">traits</span>
+    <span class="n">homoplasy_scores</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Terminal test does not require reconstruction</span>
+    <span class="k">if</span> <span class="s2">&quot;simultaneous&quot;</span> <span class="ow">in</span> <span class="n">test</span> <span class="ow">or</span> <span class="s2">&quot;subsequent&quot;</span> <span class="ow">in</span> <span class="n">test</span><span class="p">:</span>
+        <span class="c1"># reconstruct genes if not user provided</span>
+        <span class="k">if</span> <span class="n">gene_reconstruction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rec_genes</span><span class="p">,</span> <span class="n">homoplasy_scores</span> <span class="o">=</span> <span class="n">_reconstruct</span><span class="p">(</span><span class="n">genes</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">gene_reconstruction</span><span class="p">)</span>
+
+        <span class="c1"># reconstruct traits if not user provided</span>
+        <span class="k">if</span> <span class="n">trait_reconstruction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rec_traits</span><span class="p">,</span> <span class="n">__</span> <span class="o">=</span> <span class="n">_reconstruct</span><span class="p">(</span><span class="n">traits</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span> <span class="n">tree</span><span class="p">,</span> <span class="n">trait_reconstruction</span><span class="p">,</span> <span class="n">trait_type</span><span class="p">)</span>
+            <span class="n">rec_traits</span> <span class="o">=</span> <span class="n">rec_traits</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+
+    <span class="c1"># If no user-provided distribution is available, check if the scores have been calculated, otherwise do so</span>
+    <span class="k">if</span> <span class="n">homoplasy_distribution</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">homoplasy_scores</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">__</span><span class="p">,</span> <span class="n">homoplasy_scores</span> <span class="o">=</span> <span class="n">fitch_downpass</span><span class="p">(</span><span class="n">genes</span><span class="p">,</span> <span class="n">tree</span><span class="p">)</span>
+        <span class="n">homoplasy_distribution</span> <span class="o">=</span> <span class="n">_get_distribution</span><span class="p">(</span><span class="n">homoplasy_scores</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">homoplasy_distribution</span><span class="p">,</span> <span class="n">rec_genes</span><span class="p">,</span> <span class="n">rec_traits</span>
+
+<span class="k">def</span> <span class="nf">_get_scores</span><span class="p">(</span><span class="n">rec_genes</span><span class="p">,</span> <span class="n">rec_traits</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span>  <span class="n">leaf_names</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">trait_type</span><span class="p">):</span>
+    <span class="n">score_functions</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;terminal&quot;</span><span class="p">:</span> <span class="n">terminal_score</span><span class="p">,</span>
+        <span class="s2">&quot;simultaneous&quot;</span><span class="p">:</span> <span class="n">simultaneous_score</span><span class="p">,</span>
+        <span class="s2">&quot;subsequent&quot;</span><span class="p">:</span> <span class="n">subsequent_score</span>
+    <span class="p">}</span>
+
+    <span class="n">scores</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">test_type</span> <span class="ow">in</span> <span class="n">test</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">test_type</span> <span class="ow">in</span> <span class="n">score_functions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">test_type</span> <span class="o">==</span> <span class="s2">&quot;terminal&quot;</span><span class="p">:</span>
+                <span class="n">score</span> <span class="o">=</span> <span class="n">score_functions</span><span class="p">[</span><span class="n">test_type</span><span class="p">](</span><span class="n">rec_genes</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">leaf_names</span><span class="p">],</span>
+                                                   <span class="n">rec_traits</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">leaf_names</span><span class="p">,</span> <span class="p">:],</span>
+                                                   <span class="n">trait_type</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">score</span> <span class="o">=</span> <span class="n">score_functions</span><span class="p">[</span><span class="n">test_type</span><span class="p">](</span><span class="n">rec_genes</span><span class="p">,</span> <span class="n">rec_traits</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">trait_type</span><span class="p">)</span>
+            <span class="n">scores</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">test_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">score</span>
+
+    <span class="k">return</span> <span class="n">scores</span>
+
+
+<span class="k">def</span> <span class="nf">_get_p_values_ecdf</span><span class="p">(</span><span class="n">emp_scores</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">sim_scores</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates p-values for the empirical scores using the ECDF.&quot;&quot;&quot;</span>
+    <span class="c1"># TODO: implement using scipy or other library?</span>
+    <span class="n">np_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">emp_scores</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
+    <span class="n">dist</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">sim_scores</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
+    <span class="n">p_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np_scores</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span> <span class="o">&lt;=</span> <span class="n">dist</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">p_values</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">emp_scores</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">emp_scores</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_get_p_values</span><span class="p">(</span><span class="n">emp_scores</span><span class="p">,</span> <span class="n">sim_scores</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">p_value_by</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">p_value_by</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Specified p-value calculation method is not permissible.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">p_value_by</span> <span class="o">==</span> <span class="s2">&quot;count&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Currently, the only permissible p-value calculation method is </span><span class="se">\&quot;</span><span class="s2">count</span><span class="se">\&quot;</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+    <span class="n">p_values</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">test_type</span> <span class="ow">in</span> <span class="n">test</span><span class="p">:</span>
+        <span class="n">p_values</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">test_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_p_values_ecdf</span><span class="p">(</span><span class="n">emp_scores</span><span class="p">[</span><span class="n">test_type</span><span class="p">],</span> <span class="n">sim_scores</span><span class="p">[</span><span class="n">test_type</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">p_values</span>
+
+
+<div class="viewcode-block" id="treewas">
+<a class="viewcode-back" href="../../treewas.tw.html#treewas.tw.treewas">[docs]</a>
+<span class="k">def</span> <span class="nf">treewas</span><span class="p">(</span><span class="n">genes</span><span class="p">,</span>
+            <span class="n">traits</span><span class="p">,</span>
+            <span class="n">tree</span><span class="p">,</span>
+            <span class="n">trait_type</span><span class="p">,</span>
+            <span class="n">n_sim</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">homoplasy_distribution</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">test</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;terminal&quot;</span><span class="p">,</span> <span class="s2">&quot;simultaneous&quot;</span><span class="p">,</span> <span class="s2">&quot;subsequent&quot;</span><span class="p">),</span>
+            <span class="n">gene_reconstruction</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">sim_gene_reconstruction</span> <span class="o">=</span> <span class="s2">&quot;parsimony&quot;</span><span class="p">,</span>
+            <span class="n">trait_reconstruction</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">p_value_by</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
+            <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Runs the *treeWAS* algorithm</span>
+
+<span class="sd">    :param genes: A DataFrame containing binary genetic data. Columns represent individuals and rows represent loci.</span>
+<span class="sd">        Can also contain reconstructed genotypes at internal nodes of the tree. If no reconstruction is provided</span>
+<span class="sd">        ``gene_reconstruction`` has to be specified.</span>
+<span class="sd">    :type genes: pandas.DataFrame</span>
+<span class="sd">    :param traits: A DataFrame containing trait data, Columns represent traits and rows represent isolates. Can also</span>
+<span class="sd">        contain reconstructed phenotypes. If no reconstruction is provided, ``trait_reconstruction`` has to be specified.</span>
+<span class="sd">    :type traits: pandas.DataFrame</span>
+<span class="sd">    :param tree: The reconstructed phylogeny of the samples. All nodes have to be named and the names should correspond</span>
+<span class="sd">        to the names of the samples.</span>
+<span class="sd">    :type tree: TreeWrapper</span>
+<span class="sd">    :param trait_type: A string indicating the type of trait, one of ``discrete``, ``continuous``, or ``categorical``.</span>
+<span class="sd">    :type trait_type: str</span>
+<span class="sd">    :param n_sim: An integer indicating the number of genetic loci to be simulated.</span>
+<span class="sd">    :type n_sim: int</span>
+<span class="sd">    :param homoplasy_distribution: An array containing distribution of the minimum number of substitutions required to</span>
+<span class="sd">        explain the observed genotype</span>
+<span class="sd">    :type homoplasy_distribution: numpy.ndarray</span>
+<span class="sd">    :param test: A tuple containing the names of the tests to be performed.</span>
+<span class="sd">    :type test: tuple[str, ...]</span>
+<span class="sd">    :param gene_reconstruction: A string indicating the type of reconstruction to be performed on the genetic data.</span>
+<span class="sd">        Either ``parsimony`` or ``ML``.</span>
+<span class="sd">    :type gene_reconstruction: str</span>
+<span class="sd">    :param sim_gene_reconstruction: A string indicating the type of reconstruction to be performed on the simulated</span>
+<span class="sd">        genotype. Either ``parsimony`` or ``ML``.</span>
+<span class="sd">    :type sim_gene_reconstruction: str</span>
+<span class="sd">    :param trait_reconstruction: A string indicating the type of reconstruction to be performed on the phenotype. Either</span>
+<span class="sd">        ``parsimony`` or ``ML``.</span>
+<span class="sd">    :type trait_reconstruction: str</span>
+<span class="sd">    :param p_value_by: A string indicating the method to calculate the p-values. Either ``count`` or ``density``.</span>
+<span class="sd">    :type p_value_by: str</span>
+<span class="sd">    :param seed: The seed for the simulation.</span>
+<span class="sd">    :type seed: int</span>
+<span class="sd">    :return: A dictionary containing pandas DataFrames with the uncorrected p-values. The keys are the values provided</span>
+<span class="sd">        in `test`</span>
+<span class="sd">    :rtype: dict[str, pandas.DataFrame]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_loci</span><span class="p">,</span> <span class="n">__</span> <span class="o">=</span> <span class="n">genes</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">leaf_names</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">get_leaf_names</span><span class="p">()</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">edge_df</span>
+
+    <span class="c1"># Recommended to take at least ten times the number of empirical loci for simulation</span>
+    <span class="k">if</span> <span class="n">n_sim</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">n_sim</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">n_loci</span>
+
+    <span class="n">homoplasy_distribution</span><span class="p">,</span> <span class="n">rec_genes</span><span class="p">,</span> <span class="n">rec_traits</span> <span class="o">=</span> <span class="n">_handle_reconstruction</span><span class="p">(</span><span class="n">genes</span><span class="p">,</span> <span class="n">traits</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">trait_type</span><span class="p">,</span>
+                                                                           <span class="n">homoplasy_distribution</span><span class="p">,</span> <span class="n">gene_reconstruction</span><span class="p">,</span>
+                                                                           <span class="n">trait_reconstruction</span><span class="p">,</span> <span class="n">test</span><span class="p">)</span>
+    <span class="n">sim_genes</span> <span class="o">=</span> <span class="n">simulate_loci</span><span class="p">(</span><span class="n">n_sim</span><span class="p">,</span> <span class="n">homoplasy_distribution</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">rec_genes</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>
+    <span class="n">rec_sim_genes</span> <span class="o">=</span> <span class="n">sim_genes</span>
+
+    <span class="k">if</span> <span class="s2">&quot;simultaneous&quot;</span> <span class="ow">in</span> <span class="n">test</span> <span class="ow">or</span> <span class="s2">&quot;subsequent&quot;</span> <span class="ow">in</span> <span class="n">test</span><span class="p">:</span>
+        <span class="n">rec_sim_genes</span><span class="p">,</span> <span class="n">__</span> <span class="o">=</span> <span class="n">_reconstruct</span><span class="p">(</span><span class="n">sim_genes</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">sim_gene_reconstruction</span><span class="p">)</span>
+
+    <span class="n">emp_scores</span> <span class="o">=</span>  <span class="n">_get_scores</span><span class="p">(</span><span class="n">rec_genes</span><span class="p">,</span> <span class="n">rec_traits</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span>  <span class="n">leaf_names</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">trait_type</span><span class="p">)</span>
+    <span class="n">sim_scores</span> <span class="o">=</span> <span class="n">_get_scores</span><span class="p">(</span><span class="n">rec_sim_genes</span><span class="p">,</span> <span class="n">rec_traits</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">leaf_names</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">trait_type</span><span class="p">)</span>
+
+    <span class="n">p_values</span> <span class="o">=</span> <span class="n">_get_p_values</span><span class="p">(</span><span class="n">emp_scores</span><span class="p">,</span> <span class="n">sim_scores</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">p_value_by</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">p_values</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">_load_genes</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">):</span>
+    <span class="n">genes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="n">delimiter</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">genes</span>
+
+
+<span class="k">def</span> <span class="nf">_load_traits</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">):</span>
+    <span class="n">genes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="n">delimiter</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">genes</span>
+
+
+<span class="k">def</span> <span class="nf">_load_tree</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">TreeWrapper</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_load_homoplasy</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_correct_p_values</span><span class="p">(</span><span class="n">p_values</span><span class="p">,</span> <span class="n">p_value_correction</span><span class="p">,</span> <span class="n">base_p</span><span class="p">):</span>
+    <span class="c1"># TODO implement</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;P-value correction is currently not supported&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="run_treewas">
+<a class="viewcode-back" href="../../treewas.tw.html#treewas.tw.run_treewas">[docs]</a>
+<span class="k">def</span> <span class="nf">run_treewas</span><span class="p">(</span><span class="n">gene_path</span><span class="p">,</span>
+                <span class="n">trait_path</span><span class="p">,</span>
+                <span class="n">tree_path</span><span class="p">,</span>
+                <span class="n">out_dir</span><span class="p">,</span>
+                <span class="n">trait_type</span><span class="p">,</span>
+                <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span>
+                <span class="n">homoplasy_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">n_sim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">test</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;terminal&quot;</span><span class="p">,</span> <span class="s2">&quot;simultaneous&quot;</span><span class="p">,</span> <span class="s2">&quot;subsequent&quot;</span><span class="p">),</span>
+                <span class="n">gene_reconstruction</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">sim_gene_reconstruction</span><span class="o">=</span><span class="s2">&quot;parsimony&quot;</span><span class="p">,</span>
+                <span class="n">trait_reconstruction</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">filter_na</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">base_p</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+                <span class="n">p_value_correction</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">p_value_by</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
+                <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrapper function for :func:`treewas` for command line compatibility</span>
+
+<span class="sd">    Gene and trait input files are expected to be csv like. The delimiter can be specified in ``delimiter``.</span>
+
+<span class="sd">    :param gene_path: The path to the file containing the gene data. In the file, columns should represent</span>
+<span class="sd">        individuals and rows should represent loci. Can also contain reconstructed genotypes at internal nodes of the</span>
+<span class="sd">        tree. If no reconstruction is provided ``gene_reconstruction`` has to be specified.</span>
+<span class="sd">    :type gene_path: str</span>
+<span class="sd">    :param trait_path: The path to the file containing the trait data. Columns should represent traits and</span>
+<span class="sd">        rows should represent isolates. Can also contain reconstructed phenotypes. If no reconstruction is provided,</span>
+<span class="sd">        ``trait_reconstruction`` has to be specified.</span>
+<span class="sd">    :type trait_path: str</span>
+<span class="sd">    :param tree_path: The path to the Newick file with the reconstructed phylogeny of the sample. All nodes have to be</span>
+<span class="sd">        named and the names should correspond to the names of the samples.</span>
+<span class="sd">    :type tree_path: str</span>
+<span class="sd">    :param out_dir: Path to the directory where the ouput should be written.</span>
+<span class="sd">    :type out_dir: str</span>
+<span class="sd">    :param trait_type: A string indicating the type of trait, one of ``discrete``, ``continuous``, or ``categorical``.</span>
+<span class="sd">    :type trait_type: str</span>
+<span class="sd">    :param delimiter: The delimiter that is used in the input files. Defaults to ``&quot;,&quot;``.</span>
+<span class="sd">    :type delimiter: str</span>
+<span class="sd">    :param homoplasy_path: The path to the text file containing the homoplasy distribution.</span>
+<span class="sd">    :type homoplasy_path: str</span>
+<span class="sd">    :param n_sim: An integer indicating the number of genetic loci to be simulated.</span>
+<span class="sd">    :type n_sim: int</span>
+<span class="sd">    :param test: A tuple containing the names of the tests to be performed.</span>
+<span class="sd">    :type test: tuple[str, ...]</span>
+<span class="sd">    :param gene_reconstruction: A string indicating the type of reconstruction to be performed on the genetic data.</span>
+<span class="sd">        Either ``parsimony`` or ``ML``.</span>
+<span class="sd">    :type gene_reconstruction: str</span>
+<span class="sd">    :param sim_gene_reconstruction: A string indicating the type of reconstruction to be performed on the simulated</span>
+<span class="sd">        genotype. Either ``parsimony`` or ``ML``.</span>
+<span class="sd">    :type sim_gene_reconstruction: str</span>
+<span class="sd">    :param trait_reconstruction: A string indicating the type of reconstruction to be performed on the phenotype. Either</span>
+<span class="sd">        ``parsimony`` or ``ML``.</span>
+<span class="sd">    :type trait_reconstruction: str</span>
+<span class="sd">    :param filter_na: A boolean indicating whether to filter out loci that contain more than 75% missing values.</span>
+<span class="sd">    :type filter_na: bool</span>
+<span class="sd">    :param base_p: The base p-value cutoff for determining significant loci.</span>
+<span class="sd">    :type base_p: float</span>
+<span class="sd">    :param p_value_correction: A string indicating which method to use for p-value correction.</span>
+<span class="sd">    :type p_value_by: str</span>
+<span class="sd">    :param p_value_by: A string indicating the method to calculate the p-values. Either ``count`` or ``density``.</span>
+<span class="sd">    :type p_value_by: str</span>
+<span class="sd">    :param seed: The seed for the simulation.</span>
+<span class="sd">    :type seed: int</span>
+<span class="sd">    :return: A dictionary containing pandas DataFrames with the uncorrected p-values. The keys are the values provided</span>
+<span class="sd">        in ``test``.</span>
+<span class="sd">    :rtype: dict[str, pandas.DataFrame]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">trait_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">TRAIT_TYPES</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid trait type specified. Must be one of </span><span class="si">{</span><span class="n">TRAIT_TYPES</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">genes</span> <span class="o">=</span> <span class="n">_load_genes</span><span class="p">(</span><span class="n">gene_path</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">)</span>
+    <span class="n">traits</span> <span class="o">=</span> <span class="n">_load_traits</span><span class="p">(</span><span class="n">trait_path</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">)</span>
+    <span class="n">tree</span> <span class="o">=</span> <span class="n">_load_tree</span><span class="p">(</span><span class="n">tree_path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">filter_na</span><span class="p">:</span>
+        <span class="c1"># Discount loci that have more than 75% NA</span>
+        <span class="n">threshold</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">genes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.25</span><span class="p">)</span>
+        <span class="n">genes</span> <span class="o">=</span> <span class="n">genes</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">thresh</span><span class="o">=</span><span class="n">threshold</span><span class="p">)</span>
+
+    <span class="n">homoplasy_dist</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">homoplasy_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">homoplasy_dist</span> <span class="o">=</span> <span class="n">_load_homoplasy</span><span class="p">(</span><span class="n">homoplasy_path</span><span class="p">)</span>
+
+    <span class="n">p_values</span> <span class="o">=</span> <span class="n">treewas</span><span class="p">(</span><span class="n">genes</span><span class="p">,</span> <span class="n">traits</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">trait_type</span><span class="p">,</span> <span class="n">n_sim</span><span class="p">,</span> <span class="n">homoplasy_dist</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">gene_reconstruction</span><span class="p">,</span>
+                       <span class="n">sim_gene_reconstruction</span><span class="p">,</span> <span class="n">trait_reconstruction</span><span class="p">,</span> <span class="n">p_value_by</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">p_value_correction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">p_values</span> <span class="o">=</span> <span class="n">_correct_p_values</span><span class="p">(</span><span class="n">p_values</span><span class="p">,</span> <span class="n">p_value_correction</span><span class="p">,</span> <span class="n">base_p</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">test_name</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">p_values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">test_name</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">)</span>
+        <span class="n">score</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="n">delimiter</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../treewas.tw.html#treewas.tw.main">[docs]</a>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">fire</span><span class="o">.</span><span class="n">Fire</span><span class="p">(</span><span class="n">run_treewas</span><span class="p">)</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Fabian Gribi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

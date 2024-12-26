@@ -1,0 +1,236 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>treewas.asr &mdash; treeWAS  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            treeWAS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">treewas</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">treeWAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">treewas.asr</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for treewas.asr</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">A module for ancestral state reconstruction.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">treewas.tree</span> <span class="kn">import</span> <span class="n">TreeWrapper</span>
+
+<span class="c1"># Make pandas shut up about setting values on copies</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">mode</span><span class="o">.</span><span class="n">chained_assignment</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="fitch_downpass">
+<a class="viewcode-back" href="../../treewas.asr.html#treewas.asr.fitch_downpass">[docs]</a>
+<span class="k">def</span> <span class="nf">fitch_downpass</span><span class="p">(</span><span class="n">genes</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; The first pass of Fitch&#39;s parsimony algorithm.</span>
+
+<span class="sd">    Returns preliminary ancestral state sets and per locus parsimony scores.</span>
+
+<span class="sd">    :param genes: A DataFrame containing the observed binary genotypes. Each row represents a genetic locus and each</span>
+<span class="sd">        column represents an individual from the sample</span>
+<span class="sd">    :type genes: pandas.DataFrame</span>
+<span class="sd">    :param tree: The reconstructed phylogeny. Names of leaf nodes need to correspond to the names of the individuals.</span>
+<span class="sd">        Has to be bifurcating.</span>
+<span class="sd">    :type tree: TreeWrapper</span>
+<span class="sd">    :return: A tuple containing a DataFrame with the ancestral state sets determined during the first pass.</span>
+<span class="sd">        Ambiguous states are represented as the number 2. The second item in the tuple is a Series with the per locus</span>
+<span class="sd">        parsimony scores.</span>
+<span class="sd">    :rtype: tuple[pandas.DataFrame, pandas.Series]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_loci</span><span class="p">,</span> <span class="n">__</span> <span class="o">=</span> <span class="n">genes</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_loci</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">genes</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+    <span class="c1"># Consider NAs as ambiguous</span>
+    <span class="n">reconstructed</span> <span class="o">=</span> <span class="n">genes</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">tree</span><span class="o">.</span><span class="n">traverse</span><span class="p">(</span><span class="s2">&quot;postorder&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">node</span><span class="o">.</span><span class="n">is_leaf</span><span class="p">():</span>
+            <span class="n">left</span> <span class="o">=</span> <span class="n">reconstructed</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+            <span class="n">right</span> <span class="o">=</span> <span class="n">reconstructed</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+
+            <span class="c1"># Increase the score if the two states do not match, i.e. the intersection of the state sets is zero.</span>
+            <span class="n">scores</span> <span class="o">+=</span> <span class="p">(</span><span class="n">left</span> <span class="o">+</span> <span class="n">right</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># Use 2 to represent the union of 0 and 1.</span>
+            <span class="c1"># The following essentially assigns the parent node the intersection of the state sets given that it is not</span>
+            <span class="c1"># empty, otherwise it assigns the union.</span>
+            <span class="n">reconstructed</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">left</span> <span class="o">==</span> <span class="n">right</span><span class="p">)</span> <span class="o">*</span> <span class="n">left</span> <span class="o">+</span>
+                                        <span class="p">(</span><span class="n">left</span> <span class="o">+</span> <span class="n">right</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span>
+                                        <span class="p">((</span><span class="n">left</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">right</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="n">right</span> <span class="o">+</span>
+                                        <span class="p">((</span><span class="n">left</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">right</span> <span class="o">==</span> <span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="n">left</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">reconstructed</span><span class="p">,</span> <span class="n">scores</span></div>
+
+
+
+<div class="viewcode-block" id="fitch_uppass">
+<a class="viewcode-back" href="../../treewas.asr.html#treewas.asr.fitch_uppass">[docs]</a>
+<span class="k">def</span> <span class="nf">fitch_uppass</span><span class="p">(</span><span class="n">reconstructed</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; The second pass of Fitch&#39;s parsimony algorithm.</span>
+
+<span class="sd">    Returns probabilities of being in a particular ancestral state.</span>
+
+<span class="sd">    :param reconstructed: A DataFrame containing the reconstructed ancestral state sets. Ambiguous states should be</span>
+<span class="sd">        represented as the number two. Each row represents a genetic locus and each column represents an individual from</span>
+<span class="sd">        the sample</span>
+<span class="sd">    :type reconstructed: pandas.DataFrame</span>
+<span class="sd">    :param tree: The reconstructed phylogeny. Names of leaf nodes need to correspond to the names of the individuals.</span>
+<span class="sd">        Has to be bifurcating.</span>
+<span class="sd">    :type tree: TreeWrapper</span>
+<span class="sd">    :return: A DataFrame with the probabilities of being in a particular ancestral state.</span>
+<span class="sd">    :rtype: pandas.DataFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">tree</span><span class="o">.</span><span class="n">traverse</span><span class="p">(</span><span class="s2">&quot;preorder&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">node</span><span class="o">.</span><span class="n">is_leaf</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">node</span><span class="o">.</span><span class="n">is_root</span><span class="p">():</span>
+            <span class="n">current</span> <span class="o">=</span> <span class="n">reconstructed</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+            <span class="n">ancestor</span> <span class="o">=</span> <span class="n">reconstructed</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">node</span><span class="o">.</span><span class="n">up</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+            <span class="n">left</span> <span class="o">=</span> <span class="n">reconstructed</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+            <span class="n">right</span> <span class="o">=</span> <span class="n">reconstructed</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+
+            <span class="n">diminished</span> <span class="o">=</span> <span class="p">(</span><span class="n">current</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">encompassing</span> <span class="o">=</span> <span class="o">~</span><span class="n">diminished</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ancestor</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">encompassing</span> <span class="o">=</span> <span class="n">encompassing</span> <span class="o">&amp;</span> <span class="p">((</span><span class="n">right</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">current</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">left</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">current</span><span class="p">))</span>
+
+            <span class="c1"># No need to account for expanding ambiguity for binary states</span>
+            <span class="n">reconstructed</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">diminished</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">ancestor</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">diminished</span><span class="p">]</span>
+            <span class="n">reconstructed</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">encompassing</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">reconstructed</span> <span class="o">=</span> <span class="n">reconstructed</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">reconstructed</span><span class="p">[</span><span class="n">reconstructed</span> <span class="o">==</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span>
+    <span class="k">return</span> <span class="n">reconstructed</span></div>
+
+
+
+<div class="viewcode-block" id="fitch_parsimony">
+<a class="viewcode-back" href="../../treewas.asr.html#treewas.asr.fitch_parsimony">[docs]</a>
+<span class="k">def</span> <span class="nf">fitch_parsimony</span><span class="p">(</span><span class="n">genes</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">get_scores</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Perform Fitch&#39;s parsimony algorithm</span>
+
+<span class="sd">    Reconstructs ancestral state sets using Fitch&#39;s algorithm [1]_ and if ``get_scores``</span>
+<span class="sd">    is ``True``, the per locus parsimony scores will be returned.</span>
+
+<span class="sd">    For genes where  the ancestral state is ambiguous, the entry is set to `0.5`, otherwise the entry is either one</span>
+<span class="sd">    or zero.</span>
+
+<span class="sd">    .. note:: Only works for binary states and bifurcating trees.</span>
+
+<span class="sd">    :param genes: A DataFrame containing the observed binary genotypes. Entries either have to be boolean or only zeros</span>
+<span class="sd">        and ones. Each row represents a genetic locus and each column represents an individual from the sample.</span>
+<span class="sd">    :type genes: pandas.DataFrame</span>
+<span class="sd">    :param tree: The reconstructed phylogeny. Names of leaf nodes need to correspond to the names of the individuals.</span>
+<span class="sd">        Has to be bifurcating.</span>
+<span class="sd">    :type tree: TreeWrapper</span>
+<span class="sd">    :param get_scores: If set to True, returns the per locus parsimony scores</span>
+<span class="sd">    :type get_scores: bool</span>
+<span class="sd">    :return: A DataFrame with reconstructed states and if ``get_scores`` is ``True`` a Series with the per-site</span>
+<span class="sd">        parsimony score</span>
+<span class="sd">    :rtype: pandas.DataFrame | tuple[pandas.DataFrame, pandas.Series]</span>
+<span class="sd">    :raise NotImplementedError: if ``genes`` is not binary</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] W. M. Fitch, *Toward Defining the Course of Evolution: Minimum Change for a Specific Tree Topology*,</span>
+<span class="sd">        Systematic Biology,  1971, https://doi.org/10.1093/sysbio/20.4.406.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">unique_values</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">genes</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">unique_values</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Current implementation of Fitch&#39;s parsimony only works for binary states.&quot;</span>
+                                  <span class="s2">&quot; Consider using a different tool for the reconstruction of ancestral states.&quot;</span><span class="p">)</span>
+        <span class="c1"># TODO implement</span>
+
+    <span class="n">reconstructed</span><span class="p">,</span> <span class="n">scores</span> <span class="o">=</span> <span class="n">fitch_downpass</span><span class="p">(</span><span class="n">genes</span><span class="p">,</span> <span class="n">tree</span><span class="p">)</span>
+    <span class="n">reconstructed</span> <span class="o">=</span> <span class="n">fitch_uppass</span><span class="p">(</span><span class="n">reconstructed</span><span class="p">,</span> <span class="n">tree</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="n">reconstructed</span><span class="p">,</span> <span class="n">scores</span><span class="p">)</span> <span class="k">if</span> <span class="n">get_scores</span> <span class="k">else</span> <span class="n">reconstructed</span>
+    <span class="k">return</span> <span class="n">res</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Fabian Gribi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
